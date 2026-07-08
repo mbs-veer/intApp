@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Roster — Mill Docs</title>
+<style>
+  :root{
+    --graphite: #1B2228;
+    --graphite-2: #232C33;
+    --steel: #2B4C6F;
+    --steel-light: #3E6B93;
+    --paper: #FCFBF8;
+    --ink: #1B2228;
+    --ink-soft: #5A6570;
+    --line: #E4E1D8;
+    --hazard: #E8A93B;
+    --hazard-dark: #B5791F;
+    --ok: #3E7A54;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    --sans: 'IBM Plex Sans', -apple-system, Segoe UI, sans-serif;
+    --display: 'Space Grotesk', var(--sans);
+    --sidebar-w: 272px;
+    --toc-w: 240px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  a { color: var(--steel); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+    outline: 2px solid var(--hazard-dark);
+    outline-offset: 2px;
+  }
+
+  /* ===== Top bar ===== */
+  .topbar {
+    height: 56px;
+    background: var(--graphite);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 3px solid var(--hazard);
+  }
+  .topbar .brand {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .brand .mark {
+    width: 10px; height: 10px;
+    background: var(--hazard);
+    transform: rotate(45deg);
+    flex: none;
+  }
+  .topbar .brand small {
+    font-family: var(--mono);
+    font-weight: 400;
+    color: #9AA5AD;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .topbar-search { margin-left: auto; display: flex; align-items: center; position: relative; }
+  .topbar-search input {
+    width: 260px;
+    max-width: 40vw;
+    background: var(--graphite-2);
+    border: 1px solid #37424B;
+    color: var(--paper);
+    padding: 7px 10px 7px 30px;
+    border-radius: 4px;
+    font-family: var(--sans);
+    font-size: 13px;
+  }
+  .topbar-search input::placeholder { color: #7C8890; }
+  .topbar-search::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 50%;
+    width: 12px; height: 12px;
+    transform: translateY(-50%);
+    border: 1.5px solid #7C8890;
+    border-radius: 50%;
+    box-shadow: 4px 4px 0 -3px #7C8890;
+  }
+  .sidebar-toggle {
+    display: none;
+    background: none;
+    border: 1px solid #37424B;
+    color: var(--paper);
+    border-radius: 4px;
+    width: 32px; height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* ===== Layout ===== */
+  .layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-w) minmax(0,1fr) var(--toc-w);
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* ===== Left sidebar ===== */
+  .sidebar {
+    border-right: 1px solid var(--line);
+    padding: 20px 14px 60px;
+    height: calc(100vh - 56px);
+    position: sticky;
+    top: 56px;
+    overflow-y: auto;
+  }
+  .sidebar-section { margin-bottom: 4px; }
+  .sidebar-section > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px;
+    border-radius: 4px;
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .sidebar-section > summary::-webkit-details-marker { display: none; }
+  .sidebar-section > summary::before {
+    content: '▸';
+    font-size: 10px;
+    color: var(--ink-soft);
+    transition: transform 0.15s ease;
+    width: 10px;
+  }
+  .sidebar-section[open] > summary::before { transform: rotate(90deg); }
+  .sidebar-section > summary:hover { background: var(--line); color: var(--ink); }
+
+  .sidebar-list { list-style: none; margin: 2px 0 10px; padding: 0 0 0 26px; }
+  .sidebar-list li { margin: 1px 0; }
+  .sidebar-list a {
+    display: block;
+    padding: 6px 8px;
+    border-radius: 4px;
+    color: var(--ink);
+    font-size: 13.5px;
+    border-left: 2px solid transparent;
+  }
+  .sidebar-list a:hover { background: var(--line); text-decoration: none; }
+  .sidebar-list a.current {
+    color: var(--steel);
+    font-weight: 600;
+    border-left-color: var(--steel);
+    background: #EEF3F7;
+  }
+
+  /* ===== Main content ===== */
+  main {
+    padding: 32px 40px 100px;
+    min-width: 0;
+  }
+  .breadcrumb {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+  }
+  .breadcrumb a { color: var(--ink-soft); }
+  .breadcrumb a:hover { color: var(--steel); }
+  .breadcrumb .sep { color: #C9C4B6; }
+  .breadcrumb .current { color: var(--ink); }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: #EAF3EC;
+    color: var(--ok);
+    border: 1px solid #CBE3D1;
+    margin-bottom: 14px;
+  }
+  .status-badge::before { content: '●'; font-size: 8px; }
+
+  h1 {
+    font-family: var(--display);
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+  }
+  .lede {
+    font-size: 16px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 22px;
+  }
+
+  /* Roster controls */
+  .roster-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin: 20px 0 8px;
+    padding: 14px 16px;
+    background: #F5F3EC;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+  }
+  .roster-search {
+    position: relative;
+    flex: 1 1 240px;
+    min-width: 200px;
+  }
+  .roster-search input {
+    width: 100%;
+    padding: 9px 12px 9px 32px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 14px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .roster-search::before {
+    content: '';
+    position: absolute;
+    left: 12px; top: 50%;
+    width: 13px; height: 13px;
+    transform: translateY(-50%);
+    border: 1.5px solid var(--ink-soft);
+    border-radius: 50%;
+    box-shadow: 4px 4px 0 -3px var(--ink-soft);
+  }
+  .roster-count {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+  .roster-count strong { color: var(--ink); }
+
+  .no-results {
+    display: none;
+    padding: 30px 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+    text-align: center;
+  }
+  .no-results.show { display: block; }
+
+  /* Designation section */
+  .role-section { margin-top: 38px; scroll-margin-top: 72px; }
+  .role-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding-top: 6px;
+    border-top: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+  .role-section:first-of-type .role-header { border-top: none; padding-top: 0; }
+  .role-header h2 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+  }
+  .role-count {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--paper);
+    background: var(--steel);
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .roster-table {
+    width: 100%;
+    max-width: 68ch;
+    border-collapse: collapse;
+    margin: 14px 0 6px;
+    font-size: 14px;
+  }
+  .roster-table thead th {
+    text-align: left;
+    font-family: var(--mono);
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .roster-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .roster-table tr:hover td { background: #F5F3EC; }
+  .roster-table td.ecode { font-family: var(--mono); color: var(--ink-soft); width: 90px; }
+  .roster-table td.name { font-weight: 500; }
+  mark {
+    background: #FBEBC3;
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  /* ===== Right TOC ===== */
+  .toc {
+    padding: 28px 20px 40px 24px;
+    position: sticky;
+    top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+    font-size: 13px;
+  }
+  .toc-title {
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .toc ul { list-style: none; padding: 0; margin: 0; }
+  .toc li { margin: 0; }
+  .toc a {
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 5px 0 5px 12px;
+    border-left: 2px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .toc a:hover { color: var(--steel); text-decoration: none; }
+  .toc a.active { color: var(--steel); border-left-color: var(--steel); font-weight: 600; }
+  .toc a .n { font-family: var(--mono); font-size: 11px; color: #97A2AA; }
+  .toc-meta {
+    margin-top: 26px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+  }
+  .toc-meta strong { color: var(--ink); display:block; font-size:12.5px; }
+
+  /* ===== Mobile ===== */
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: var(--sidebar-w) minmax(0,1fr); }
+    .toc { display: none; }
+  }
+  @media (max-width: 800px) {
+    .sidebar-toggle { display: inline-flex; align-items:center; justify-content:center; }
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: fixed;
+      left: 0; top: 56px;
+      width: 82vw;
+      max-width: 300px;
+      background: var(--paper);
+      box-shadow: 2px 0 16px rgba(0,0,0,0.15);
+      transform: translateX(-100%);
+      transition: transform 0.2s ease;
+      z-index: 40;
+    }
+    .sidebar.open { transform: translateX(0); }
+    main { padding: 24px 20px 80px; }
+    h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+  <div class="brand"><span class="mark"></span>Mill Docs <small>REBAR ROLLING · INTERNAL</small></div>
+  <div class="topbar-search">
+    <input type="text" placeholder="Search documentation…" aria-label="Search documentation">
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT SIDEBAR -->
+  <nav class="sidebar" id="sidebar" aria-label="Section navigation">
+    
+
+    <details class="sidebar-section" open>
+      <summary>Personnel</summary>
+      <ul class="sidebar-list">
+        <li><a href="#" class="current">Employee List</a></li>
+      </ul>
+    </details>
+
+    
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="breadcrumb">
+      <a href="#">Mill Docs</a><span class="sep">/</span>
+      <a href="#">Personnel</a><span class="sep">/</span>
+      <span class="current">Employee Roster</span>
+    </div>
+
+    <span class="status-badge">Updated · july 2026</span>
+
+    <h1>Employee Roster</h1>
+    <p class="lede">
+      </p>
+
+    <div class="roster-controls">
+      <div class="roster-search">
+        <input type="text" id="rosterSearch" placeholder="Search by name or ECODE…" aria-label="Search roster">
+      </div>
+      <div class="roster-count" id="rosterCount"><strong>68</strong> employees · 9 designations</div>
+    </div>
+
+    <div class="no-results" id="noResults">No employees match that search.</div>
+
+    <div id="rosterSections"></div>
+  </main>
+
+  <!-- RIGHT TOC -->
+  <aside class="toc" aria-label="Designations on this page">
+    <div class="toc-title">Designations</div>
+    <ul id="tocList"></ul>
+    <div class="toc-meta">
+      <strong>Employee Roster</strong>
+      Source: Employee_List.xlsx<br>
+      68 employees total
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  const employees = [{"designation": "Shift in Charge", "ecode": 6643, "name": "Dev Prakash Singh"}, {"designation": "Shift in Charge", "ecode": 6540, "name": "Muni Babu"}, {"designation": "Shift in Charge", "ecode": 6182, "name": "Suriyaprasad Manoharan"}, {"designation": "Re-Heating Furnace Engineer", "ecode": 6584, "name": "Ganesh Mensesina"}, {"designation": "Main Pulpit Operator", "ecode": 6404, "name": "Ghulam Muhammad"}, {"designation": "Main Pulpit Operator", "ecode": 6670, "name": "Sunil Gadi"}, {"designation": "Main Pulpit Operator", "ecode": 6635, "name": "Rahul Singh Harish"}, {"designation": "Mill Roller", "ecode": 6117, "name": "Raman Kumar"}, {"designation": "Mill Roller", "ecode": 6514, "name": "Mohammad Kamarae Alam"}, {"designation": "Mill Roller", "ecode": 6421, "name": "Nadir Ali"}, {"designation": "Mill Roller", "ecode": 6392, "name": "Danish Ali"}, {"designation": "Mill Roller", "ecode": 6653, "name": "Momtaj Miyan"}, {"designation": "Mill Roller", "ecode": 6423, "name": "Akmal Aziz"}, {"designation": "Mill Roller", "ecode": 6648, "name": "Navatej Bahadur Singh"}, {"designation": "Mill Roller", "ecode": 6402, "name": "Muhammad Daniyal"}, {"designation": "Mill Roller", "ecode": 6380, "name": "Asad Jameel"}, {"designation": "Mill Roller", "ecode": 6395, "name": "Muhammad Qaisar"}, {"designation": "Mill Roller", "ecode": 6444, "name": "Shakeeb Arsalan"}, {"designation": "Mill Roller", "ecode": 6520, "name": "Binod Kumar Mahrana"}, {"designation": "Mill Roller", "ecode": 6312, "name": "Meddie Ndyanabo"}, {"designation": "Mill Roller", "ecode": 6213, "name": "Bindalal Sharma"}, {"designation": "Furnace Operator", "ecode": 6045, "name": "Karimullah Dawood"}, {"designation": "Furnace Operator", "ecode": 6293, "name": "Muhammad Imran Khan"}, {"designation": "Furnace Operator", "ecode": 6286, "name": "Shahzaib Ishaq"}, {"designation": "Furnace Operator", "ecode": 6228, "name": "Usama Sharif"}, {"designation": "Furnace Operator", "ecode": 6234, "name": "Bharathi Rajendran"}, {"designation": "Furnace Operator", "ecode": 6659, "name": "Subash Thangaraj"}, {"designation": "Gas Cutter", "ecode": 6345, "name": "Shivshankar Rahate"}, {"designation": "Gas Cutter", "ecode": 6580, "name": "Amarnath Yadav"}, {"designation": "Gas Cutter", "ecode": 6446, "name": "Muhammad Nadeem Ajmal"}, {"designation": "Gas Cutter", "ecode": 6445, "name": "Fiaz Ahmad Allah"}, {"designation": "Gas Cutter", "ecode": 6432, "name": "Muhammad Adil Umar"}, {"designation": "OH Crane Operator", "ecode": 6238, "name": "Aswani Kumar Yadav"}, {"designation": "OH Crane Operator", "ecode": 6436, "name": "Zaheer Abbas"}, {"designation": "OH Crane Operator", "ecode": 6361, "name": "Tarkeshwar Singh"}, {"designation": "OH Crane Operator", "ecode": 6572, "name": "Loknath Yadav"}, {"designation": "OH Crane Operator", "ecode": 6655, "name": "Vikash Kumar Singh"}, {"designation": "OH Crane Operator", "ecode": 6420, "name": "Muhammad Ismail"}, {"designation": "OH Crane Operator", "ecode": 6669, "name": "Srilal Yadav"}, {"designation": "Finishing Pulpit Operator", "ecode": 6260, "name": "Suleman Mansoor"}, {"designation": "Finishing Pulpit Operator", "ecode": 6216, "name": "Anab Khushal"}, {"designation": "Finishing Pulpit Operator", "ecode": 6261, "name": "Ahtasham Ul Haq"}, {"designation": "Finishing Pulpit Operator", "ecode": 6243, "name": "Pralhad Chauhan"}, {"designation": "Finishing Pulpit Operator", "ecode": 6636, "name": "Vishal Yadav Savaru"}, {"designation": "Finishing Pulpit Operator", "ecode": 6193, "name": "Aqib Ashiq"}, {"designation": "Finishing Pulpit Operator", "ecode": 6075, "name": "Rajkumar Chauhan"}, {"designation": "Finishing Pulpit Operator", "ecode": 6614, "name": "Murugan Vengadasalam"}, {"designation": "Segregation Assistant", "ecode": 6480, "name": "Muhammad Ali Hanif"}, {"designation": "Segregation Assistant", "ecode": 6633, "name": "Vinod Yadav Nagina"}, {"designation": "Segregation Assistant", "ecode": 6575, "name": "Pradip Rajvanashi"}, {"designation": "Segregation Assistant", "ecode": 6576, "name": "MD Azad Ansari"}, {"designation": "Segregation Assistant", "ecode": 6476, "name": "Jabbar Ahmed"}, {"designation": "Segregation Assistant", "ecode": 6657, "name": "Anavar Shah"}, {"designation": "Segregation Assistant", "ecode": 6638, "name": "MD Manvar Khan"}, {"designation": "Segregation Assistant", "ecode": 6639, "name": "Alamgir Shabir Ali"}, {"designation": "Segregation Assistant", "ecode": 6192, "name": "Tayyab Hussain"}, {"designation": "Segregation Assistant", "ecode": 6490, "name": "Rakesh Kumar Mangu Ram"}, {"designation": "Segregation Assistant", "ecode": 6315, "name": "Sulaiman Abdul Aziz Mutebi"}, {"designation": "Segregation Assistant", "ecode": 6574, "name": "MD Jilani Ansari"}, {"designation": "Segregation Assistant", "ecode": 6477, "name": "Muhammad Sajid Sher"}, {"designation": "Segregation Assistant", "ecode": 6617, "name": "Heera Lal Nageshvar"}, {"designation": "Segregation Assistant", "ecode": 6646, "name": "Mohammad Ataur Rahman"}, {"designation": "Segregation Assistant", "ecode": 6640, "name": "Mohammad Hasan Raza"}, {"designation": "Segregation Assistant", "ecode": 6262, "name": "Abdallah Umar"}, {"designation": "Segregation Assistant", "ecode": 6232, "name": "Firoz Alam"}, {"designation": "Segregation Assistant", "ecode": 6620, "name": "Prabhu Kumar Ram"}, {"designation": "Segregation Assistant", "ecode": 6684, "name": "Mandeep Singh Shohet"}, {"designation": "Segregation Assistant", "ecode": 6690, "name": "Henry Kakooza"}];
+
+  // Preserve first-seen designation order (matches source sheet order)
+  const order = [];
+  employees.forEach(e => { if (!order.includes(e.designation)) order.push(e.designation); });
+
+  const grouped = {};
+  order.forEach(d => grouped[d] = employees.filter(e => e.designation === d));
+
+  const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+  const sectionsEl = document.getElementById('rosterSections');
+  const tocList = document.getElementById('tocList');
+
+  order.forEach(designation => {
+    const rows = grouped[designation].slice().sort((a,b) => a.name.localeCompare(b.name));
+    const id = 'role-' + slug(designation);
+
+    const section = document.createElement('section');
+    section.className = 'role-section';
+    section.id = id;
+    section.dataset.designation = designation;
+
+    section.innerHTML = `
+      <div class="role-header">
+        <h2>${designation}</h2>
+        <span class="role-count">${rows.length}</span>
+      </div>
+      <table class="roster-table">
+        <thead><tr><th>ECODE</th><th>Name</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `<tr data-name="${r.name.toLowerCase()}" data-ecode="${r.ecode}">
+            <td class="ecode">${r.ecode}</td><td class="name">${r.name}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    `;
+    sectionsEl.appendChild(section);
+
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#${id}" data-toc="${id}">${designation}<span class="n">${rows.length}</span></a>`;
+    tocList.appendChild(li);
+  });
+
+  // Search / filter
+  const searchInput = document.getElementById('rosterSearch');
+  const countEl = document.getElementById('rosterCount');
+  const noResults = document.getElementById('noResults');
+  const allRows = Array.from(document.querySelectorAll('.roster-table tbody tr'));
+
+  function highlight(td, query) {
+    const raw = td.textContent;
+    if (!query) { td.innerHTML = raw; return; }
+    const idx = raw.toLowerCase().indexOf(query);
+    if (idx === -1) { td.innerHTML = raw; return; }
+    td.innerHTML = raw.slice(0, idx) + '<mark>' + raw.slice(idx, idx + query.length) + '</mark>' + raw.slice(idx + query.length);
+  }
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let visibleTotal = 0;
+
+    document.querySelectorAll('.role-section').forEach(section => {
+      let visibleInSection = 0;
+      section.querySelectorAll('tbody tr').forEach(tr => {
+        const match = !q || tr.dataset.name.includes(q) || tr.dataset.ecode.includes(q);
+        tr.style.display = match ? '' : 'none';
+        if (match) {
+          visibleInSection++;
+          visibleTotal++;
+          highlight(tr.querySelector('.name'), q);
+          highlight(tr.querySelector('.ecode'), q);
+        }
+      });
+      section.style.display = visibleInSection > 0 ? '' : 'none';
+      section.querySelector('.role-count').textContent = visibleInSection;
+    });
+
+    countEl.innerHTML = q
+      ? `<strong>${visibleTotal}</strong> match${visibleTotal === 1 ? '' : 'es'} for “${searchInput.value.trim()}”`
+      : `<strong>${employees.length}</strong> employees · ${order.length} designations`;
+
+    noResults.classList.toggle('show', visibleTotal === 0);
+  });
+
+  // Mobile sidebar toggle
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebarToggle');
+  toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  document.addEventListener('click', (e) => {
+    if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggle) {
+      sidebar.classList.remove('open');
+    }
+  });
+
+  // Scrollspy for right-hand TOC
+  const tocLinks = Array.from(document.querySelectorAll('[data-toc]'));
+  const targets = tocLinks.map(link => document.getElementById(link.dataset.toc)).filter(Boolean);
+  const setActive = (id) => tocLinks.forEach(l => l.classList.toggle('active', l.dataset.toc === id));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) setActive(entry.target.id); });
+  }, { rootMargin: '-80px 0px -70% 0px', threshold: 0 });
+  targets.forEach(t => observer.observe(t));
+</script>
+
+</body>
+</html>

@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Import html2pdf.js via CDN for on-the-fly clean document compilation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <style>
   :root{
     --graphite: #1B2228;
@@ -39,14 +41,16 @@
     display: flex; align-items: center; gap: 14px; padding: 0 16px;
     position: sticky; top: 0; z-index: 50; border-bottom: 3px solid var(--hazard);
   }
-  .topbar .brand { font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: 0.02em; display:flex; align-items:center; gap:8px; }
+  .topbar .brand { font-family: var(--display); font-weight: 700; font-size: 17px; letter-spacing: 0.02em; display:flex; align-items:center; gap:8px; cursor: pointer; }
   .brand .mark { width:10px; height:10px; background: var(--hazard); transform: rotate(45deg); flex:none; }
   .topbar .brand small { font-family: var(--mono); font-weight:400; color:#9AA5AD; font-size:11px; letter-spacing:0.06em; }
   .topbar-search { margin-left:auto; display:flex; align-items:center; position:relative; }
   .topbar-search input {
-    width:260px; max-width:40vw; background: var(--graphite-2); border:1px solid #37424B;
+    width:320px; max-width:40vw; background: var(--graphite-2); border:1px solid #37424B;
     color: var(--paper); padding:7px 10px 7px 30px; border-radius:4px; font-family: var(--sans); font-size:13px;
+    transition: all 0.2s ease;
   }
+  .topbar-search input:focus { border-color: var(--hazard); outline: none; background: #2a353d; }
   .topbar-search input::placeholder { color:#7C8890; }
   .topbar-search::before {
     content:''; position:absolute; left:10px; top:50%; width:12px; height:12px; transform:translateY(-50%);
@@ -57,7 +61,7 @@
   .layout { display:grid; grid-template-columns: var(--sidebar-w) minmax(0,1fr) var(--toc-w); max-width:1400px; margin:0 auto; }
 
   .sidebar { border-right:1px solid var(--line); padding:20px 14px 60px; height:calc(100vh - 56px); position:sticky; top:56px; overflow-y:auto; }
-  .sidebar-section { margin-bottom:4px; }
+  .sidebar-section { margin-bottom:12px; }
   .sidebar-section > summary {
     list-style:none; cursor:pointer; display:flex; align-items:center; gap:8px; padding:8px 8px; border-radius:4px;
     font-family: var(--display); font-weight:600; font-size:13px; letter-spacing:0.02em; text-transform:uppercase; color: var(--ink-soft);
@@ -89,6 +93,21 @@
   h2.kit-heading { font-family: var(--display); font-size:22px; font-weight:700; letter-spacing:-0.01em; margin:0 0 4px; scroll-margin-top: 72px; }
   .lede { font-size:16px; color: var(--ink-soft); max-width:62ch; margin:0 0 22px; }
 
+  /* View Visibility */
+  .app-view { display: none; }
+  .app-view.active { display: block; }
+
+  /* Dashboard Home Layout */
+  .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0 32px; }
+  .stat-card { background: #FAF9F5; border: 1px solid var(--line); border-radius: 6px; padding: 18px; border-top: 3px solid var(--steel); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.04); border-top-color: var(--hazard); }
+  .stat-card h3 { margin: 0 0 6px; font-size: 14px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-card .val { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--graphite); }
+  .stat-card .desc { font-size: 12.5px; color: var(--ink-soft); margin-top: 4px; }
+
+  /* Global Search Header Panel */
+  .search-results-header { background: #EEF3F7; border: 1px solid #C8D7E3; border-radius: 6px; padding: 12px 16px; margin-bottom: 24px; font-size: 14px; }
+
   .kit-section { padding-top: 8px; }
   .kit-section + .kit-section { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--line); }
 
@@ -114,22 +133,7 @@
   }
   .callout strong { color: var(--hazard-dark); }
 
-  .roster-controls {
-    display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin:20px 0 8px; padding:14px 16px;
-    background:#F5F3EC; border:1px solid var(--line); border-radius:8px;
-  }
-  .roster-search { position:relative; flex:1 1 240px; min-width:200px; }
-  .roster-search input {
-    width:100%; padding:9px 12px 9px 32px; border:1px solid var(--line); border-radius:6px;
-    font-family: var(--sans); font-size:14px; background: var(--paper); color: var(--ink);
-  }
-  .roster-search::before {
-    content:''; position:absolute; left:12px; top:50%; width:13px; height:13px; transform:translateY(-50%);
-    border:1.5px solid var(--ink-soft); border-radius:50%; box-shadow: 4px 4px 0 -3px var(--ink-soft);
-  }
-  .roster-count { font-family: var(--mono); font-size:12.5px; color:var(--ink-soft); white-space:nowrap; }
-  .roster-count strong { color: var(--ink); }
-  .no-results { display:none; padding:30px 0; color:var(--ink-soft); font-size:14px; text-align:center; }
+  .no-results { display:none; padding:40px 0; color:var(--ink-soft); font-size:14px; text-align:center; background: #FAF9F5; border: 1px dashed var(--line); border-radius: 6px; }
   .no-results.show { display:block; }
 
   .kit-table { width:100%; max-width: 80ch; border-collapse:collapse; margin:18px 0 6px; font-size:14px; }
@@ -158,6 +162,37 @@
   .toc-jump li a { display:block; padding:5px 0; font-size:12.5px; color:var(--ink); }
   .toc-jump li a:hover { color: var(--steel); }
 
+  /* Export Button Styling */
+  .btn-pdf {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    background-color: var(--steel);
+    color: var(--paper) !important;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    margin-bottom: 20px;
+  }
+  .btn-pdf:hover {
+    background-color: var(--steel-light);
+    text-decoration: none;
+  }
+  .btn-pdf svg {
+    fill: currentColor;
+    width: 13px;
+    height: 13px;
+  }
+
   @media (max-width:1100px) { .layout { grid-template-columns: var(--sidebar-w) minmax(0,1fr); } .toc { display:none; } }
   @media (max-width:800px) {
     .sidebar-toggle { display:inline-flex; align-items:center; justify-content:center; }
@@ -175,99 +210,115 @@
 <body>
 
 <div class="topbar">
-  
   <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
-  <div class="brand"><span class="mark"></span>Mill Docs <small>REBAR ROLLING · INTERNAL</small></div>
-  <div class="topbar-search"><input type="text" placeholder="Search documentation…" aria-label="Search documentation"></div>
-
+  <div class="brand" onclick="navigateTo('home')"><span class="mark"></span>Mill Docs <small>REBAR ROLLING · INTERNAL</small></div>
+  <div class="topbar-search">
+    <input type="text" id="globalSearch" placeholder="Search…" aria-label="Search all documentation">
+  </div>
 </div>
 
 <div class="layout">
   
   <nav class="sidebar" id="sidebar" aria-label="Section navigation">
+    <div class="sidebar-section">
+      <ul class="sidebar-list" style="padding-left: 0;">
+        <li><a href="#home" id="nav-home" class="current" onclick="navigateTo('home')">🏠 Home Dashboard</a></li>
+      </ul>
+    </div>
     <details class="sidebar-section" open>
       <summary>Tool Kits</summary>
       <ul class="sidebar-list">
-        <li><a href="#finishing" class="current">Finishing Mill Fitter Tool Box</a></li>
-        <li><a href="#intermediate">Intermediate Mill Fitter Tool Box</a></li>
-        <li><a href="#tmtfitter">TMT Fitter Tool Box</a></li>
+        <li><a href="#finishing" id="nav-finishing" onclick="navigateTo('kits', 'finishing')">Finishing Mill Fitter Box</a></li>
+        <li><a href="#intermediate" id="nav-intermediate" onclick="navigateTo('kits', 'intermediate')">Intermediate Mill Fitter Box</a></li>
       </ul>
     </details> 
   </nav>
 
   <main>
-    <div class="breadcrumb">
-      <a href="#">Mill Docs</a><span class="sep">/</span>
-      <span class="current">Tool Kits</span>
-    </div>
-
-    <span class="status-badge">Reference · Standard Kit Lists</span>
-
-    <h1>Mill Fitter Tool Kits</h1>
-    <p class="lede">
-      Standard tool complements issued to finishing and intermediate mill fitters, with
-      material codes for stock checks and reissue.
-    </p>
-
-    <!-- ===================== FINISHING MILL FITTER ===================== -->
-    <section class="kit-section" id="finishing">
-      <h2 class="kit-heading">Finishing Mill Fitter Tool Box</h2>
-           
-    <div class="roster-controls">
-        <div class="roster-search">
-          <input type="text" id="kitSearch-fin" placeholder="Search by code, description, or size…" aria-label="Search finishing mill fitter tool box contents">
-        </div>
-        <div class="roster-count" id="kitCount-fin"><strong id="kitCountNum-fin">–</strong> line items</div>
-    </div>
-
-    <div class="no-results" id="noResults-fin">No items match that search.</div>
-
-    <table class="kit-table">
-        <thead>
-          <tr><th>Mat Code</th><th>Size</th><th>Description</th><th>Qty</th></tr>
-        </thead>
-        <tbody id="kitTableBody-fin"></tbody>
-    </table>
-    </section>
-
-    <!-- ===================== INTERMEDIATE MILL FITTER ===================== -->
-    <section class="kit-section" id="intermediate">
-      <h2 class="kit-heading">Intermediate Mill Fitter Tool Box</h2>
+    <!-- ===================== HOMEPAGE VIEW ===================== -->
+    <div id="view-home" class="app-view active">
+      <div class="breadcrumb">
+        <a href="#" onclick="navigateTo('home')">Mill Docs</a><span class="sep">/</span>
+        <span class="current">Home</span>
+      </div>
+      <span class="status-badge">Internal Hub</span>
+      <h1>HRM1 Production</h1>
       
-      <div class="roster-controls">
-        <div class="roster-search">
-          <input type="text" id="kitSearch-int" placeholder="Search by code, description, or size…" aria-label="Search intermediate mill fitter tool box contents">
+      <div class="home-grid">
+        <div class="stat-card" onclick="navigateTo('kits', 'finishing')">
+          <h3>Finishing Tool Box</h3>
+          <div class="val" id="home-count-fin">24</div>
+          <div class="desc">Standard tools cataloged</div>
         </div>
-        <div class="roster-count" id="kitCount-int"><strong id="kitCountNum-int">–</strong> line items</div>
+        <div class="stat-card" onclick="navigateTo('kits', 'intermediate')">
+          <h3>Intermediate Tool Box</h3>
+          <div class="val" id="home-count-int">10</div>
+          <div class="desc">Standard tools cataloged</div>
+        </div>
+        
       </div>
 
-      <div class="no-results" id="noResults-int">No items match that search.</div>
+      <div class="callout">
+        <strong>Notice:</strong> Verify the stock every month</div>
+    </div>
 
-      <table class="kit-table">
-        <thead>
-          <tr><th>Mat Code</th><th>Size</th><th>Description</th><th>Qty</th></tr>
-        </thead>
-        <tbody id="kitTableBody-int"></tbody>
-      </table>
-    
-    </section>
+    <!-- ===================== KITS VIEW ===================== -->
+    <div id="view-kits" class="app-view">
+      <div class="breadcrumb">
+        <a href="#" onclick="navigateTo('home')">Mill Docs</a><span class="sep">/</span>
+        <span class="current">Tool Kits Manifest</span>
+      </div>
+
+      <div id="search-feedback" class="search-results-header" style="display: none;">
+        Global Search Filter Active: showing matches across categories. <a href="#" id="clearSearch" style="font-weight: 600; margin-left: 8px;">× Clear Search</a>
+      </div>
+
+      <!-- FINISHING MILL FITTER -->
+      <section class="kit-section" id="finishing">
+        <h2 class="kit-heading">Finishing Mill Fitter Tool Box</h2>
+       
+        <table class="kit-table">
+            <thead>
+              <tr><th>Mat Code</th><th>Size</th><th>Description</th><th>Qty</th></tr>
+            </thead>
+            <tbody id="kitTableBody-fin"></tbody>
+        </table>
+        <div class="no-results" id="noResults-fin">No matching items here.</div>
+      </section>
+
+      <!-- INTERMEDIATE MILL FITTER -->
+      <section class="kit-section" id="intermediate">
+        <h2 class="kit-heading">Intermediate Mill Fitter Tool Box</h2>
+        
+        <table class="kit-table">
+          <thead>
+            <tr><th>Mat Code</th><th>Size</th><th>Description</th><th>Qty</th></tr>
+          </thead>
+          <tbody id="kitTableBody-int"></tbody>
+        </table>
+        <div class="no-results" id="noResults-int">No matching items here.</div>
+      </section>
+    </div>
   </main>
 
   <aside class="toc" aria-label="Page info">
-    <div class="toc-title">On this page</div>
+    <div class="toc-title">Quick Actions</div>
+    <!-- Clean PDF Export Action Button -->
+    <button class="btn-pdf" id="exportPdfBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 224h96c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16zm224 0c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16H224c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16h80z"/></svg>
+      Export Minimal PDF
+    </button>
     <ul class="toc-jump">
-      <li><a href="#finishing">Finishing Mill Fitter Tool Box</a></li>
-      <li><a href="#intermediate">Intermediate Mill Fitter Tool Box</a></li>
-      <li><a href="#tmt">TMT Fitter Tool Box</a></li>
+      <li><a href="#home" onclick="navigateTo('home')">Return Home</a></li>
+      <li><a href="#finishing" onclick="navigateTo('kits', 'finishing')">Finishing Box</a></li>
+      <li><a href="#intermediate" onclick="navigateTo('kits', 'intermediate')">Intermediate Box</a></li>
     </ul>
     <div class="toc-title">Reference</div>
     <div class="toc-meta">
-      <strong>Mill Fitter Tool Kits</strong>
-      Tool Kits · Standard issue<br>
-      2 kits · 29 coded items combined
+      <strong>Unified Registry</strong>
+      Cross-indexed Layout<br>
       <div class="hint">
-        Each kit has its own search — matches material code, size, or description.
-        Allen key sub-sizes are indented under the set's parent line.
+        The Top Search queries master components across all structural kits dynamically. 
       </div>
     </div>
   </aside>
@@ -275,8 +326,6 @@
 </div>
 
 <script>
-  // ---- Finishing Mill Fitter kit ----
-  // isSet: true marks a sub-line that shares its parent set's code/qty (Allen key sizes)
   const kitFin = [
     { code: "8000000124", size: "6lb",  desc: "Hammer", qty: "2" },
     { code: "8000000389", size: "55mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "1" },
@@ -304,7 +353,6 @@
     { code: "7000000010", size: "",     desc: "Binding Wire", qty: "" }
   ];
 
-  // ---- Intermediate Mill Fitter kit ----
   const kitInt = [
     { code: "8000000111", size: "19mm", desc: "Combination Spanner - Ring - Open", qty: "" },
     { code: "8000000109", size: "24mm", desc: "Combination Spanner - Ring - Open", qty: "" },
@@ -318,49 +366,206 @@
     { code: "8000000049", size: "Ø16mm x 4mtr", desc: "Wire Rope Sling", qty: "" }
   ];
 
+  document.getElementById('home-count-fin').innerText = kitFin.length;
+  document.getElementById('home-count-int').innerText = kitInt.length;
+
   function highlight(text, query) {
-    if (!text) return text;
-    if (!query) return text;
+    if (!text || !query) return text || '—';
     const idx = text.toLowerCase().indexOf(query);
     if (idx === -1) return text;
     return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
   }
 
-  function setupKit(kit, suffix) {
+  function renderTable(kit, suffix, query) {
     const tbody = document.getElementById('kitTableBody-' + suffix);
-    const searchInput = document.getElementById('kitSearch-' + suffix);
-    const countEl = document.getElementById('kitCount-' + suffix);
     const noResults = document.getElementById('noResults-' + suffix);
+    const tableEl = tbody.closest('.kit-table');
 
-    function render() {
-      const q = searchInput.value.trim().toLowerCase();
-      const rows = kit.filter(k =>
-        !q || k.code.toLowerCase().includes(q) || k.size.toLowerCase().includes(q) || k.desc.toLowerCase().includes(q)
-      );
+    const rows = kit.filter(k =>
+      !query || k.code.toLowerCase().includes(query) || k.size.toLowerCase().includes(query) || k.desc.toLowerCase().includes(query)
+    );
 
+    if (rows.length === 0) {
+      tbody.innerHTML = '';
+      tableEl.style.display = 'none';
+      noResults.classList.add('show');
+    } else {
+      tableEl.style.display = 'table';
+      noResults.classList.remove('show');
       tbody.innerHTML = rows.map(k => `
         <tr class="${k.isSet ? 'set-child' : ''}">
-          <td class="code">${k.code ? highlight(k.code, q) : '—'}</td>
-          <td class="size">${highlight(k.size, q) || '—'}</td>
-          <td class="desc">${highlight(k.desc, q)}</td>
-          <td class="qty ${k.qty ? '' : 'empty'}">${k.qty ? highlight(k.qty, q) : '—'}</td>
+          <td class="code">${k.code ? highlight(k.code, query) : '—'}</td>
+          <td class="size">${highlight(k.size, query)}</td>
+          <td class="desc">${highlight(k.desc, query)}</td>
+          <td class="qty ${k.qty ? '' : 'empty'}">${k.qty ? highlight(k.qty, query) : '—'}</td>
         </tr>
       `).join('');
-
-      countEl.innerHTML = q
-        ? `<strong>${rows.length}</strong> match${rows.length === 1 ? '' : 'es'} for “${searchInput.value.trim()}”`
-        : `<strong>${kit.length}</strong> line items`;
-
-      noResults.classList.toggle('show', rows.length === 0);
     }
-
-    searchInput.addEventListener('input', render);
-    render();
   }
 
-  setupKit(kitFin, 'fin');
-  setupKit(kitInt, 'int');
+  function performGlobalSearch() {
+    const query = document.getElementById('globalSearch').value.trim().toLowerCase();
+    const feedback = document.getElementById('search-feedback');
 
+    if (query) {
+      navigateTo('kits');
+      feedback.style.display = 'block';
+    } else {
+      feedback.style.display = 'none';
+    }
+
+    renderTable(kitFin, 'fin', query);
+    renderTable(kitInt, 'int', query);
+  }
+
+  function navigateTo(viewId, targetElementId) {
+    document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
+    document.querySelectorAll('.sidebar-list a').forEach(link => link.classList.remove('current'));
+
+    if (viewId === 'home') {
+      document.getElementById('view-home').classList.add('active');
+      document.getElementById('nav-home').classList.add('current');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (viewId === 'kits') {
+      document.getElementById('view-kits').classList.add('active');
+      if (targetElementId) {
+        document.getElementById('nav-' + targetElementId).classList.add('current');
+        setTimeout(() => {
+          const target = document.getElementById(targetElementId);
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }, 50);
+      }
+    }
+  }
+
+  document.getElementById('globalSearch').addEventListener('input', performGlobalSearch);
+  document.getElementById('clearSearch').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('globalSearch').value = '';
+    performGlobalSearch();
+  });
+
+  // Dynamic Plain PDF Generation Engine
+  document.getElementById('exportPdfBtn').addEventListener('click', () => {
+    // 1. Build a clean, isolated document purely in JS memory
+    const printWindow = document.createElement('div');
+    printWindow.style.padding = '20px';
+    printWindow.style.background = '#ffffff';
+    printWindow.style.color = '#000000';
+    printWindow.style.fontFamily = "var(--mono)";
+
+    // Document header styling
+    const mainTitle = document.createElement('h1');
+    mainTitle.innerText = "MILL FITTER TOOL KITS MANIFEST";
+    mainTitle.style.fontFamily = "var(--mono)";
+    mainTitle.style.fontSize = "22px";
+    mainTitle.style.borderBottom = "2px solid #000000";
+    mainTitle.style.paddingBottom = "8px";
+    mainTitle.style.marginBottom = "30px";
+    mainTitle.style.textTransform = "uppercase";
+    printWindow.appendChild(mainTitle);
+
+    // Section 1: Finishing Box
+    const section1 = document.createElement('div');
+    section1.style.marginBottom = "40px";
+    
+    const h1 = document.createElement('h2');
+    h1.innerText = "1. Finishing Mill Fitter Tool Box";
+    h1.style.fontFamily = "var(--mono)";
+    h1.style.fontSize = "16px";
+    h1.style.borderBottom = "1px dashed #000000";
+    h1.style.paddingBottom = "4px";
+    h1.style.textTransform = "uppercase";
+    section1.appendChild(h1);
+
+    const table1 = document.createElement('table');
+    table1.style.width = "100%";
+    table1.style.borderCollapse = "collapse";
+    table1.style.marginTop = "15px";
+    table1.innerHTML = `
+      <thead>
+        <tr style="border-bottom: 1px solid #000000; font-size: 11px;">
+          <th style="text-align: left; padding: 6px; font-family: var(--mono);">MAT CODE</th>
+          <th style="text-align: left; padding: 6px; font-family: var(--mono);">SIZE</th>
+          <th style="text-align: left; padding: 6px; font-family: var(--mono);">DESCRIPTION</th>
+          <th style="text-align: center; padding: 6px; font-family: var(--mono);">QTY</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${kitFin.map(item => `
+          <tr style="border-bottom: 1px solid #e0e0e0; font-size: 11px; ${item.isSet ? 'color: #555555;' : ''}">
+            <td style="padding: 6px; font-family: var(--mono);">${item.code || '—'}</td>
+            <td style="padding: 6px; font-family: var(--mono);">${item.size || '—'}</td>
+            <td style="padding: 6px; font-family: var(--mono);">${item.desc}</td>
+            <td style="padding: 6px; text-align: center; font-family: var(--mono);">${item.qty || '—'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+    section1.appendChild(table1);
+    printWindow.appendChild(section1);
+
+    // Page Break Element
+    const pageBreak = document.createElement('div');
+    pageBreak.style.pageBreakBefore = 'always';
+    printWindow.appendChild(pageBreak);
+
+    // Section 2: Intermediate Box
+    const section2 = document.createElement('div');
+    section2.style.marginTop = "30px";
+    
+    const h2 = document.createElement('h2');
+    h2.innerText = "2. Intermediate Mill Fitter Tool Box";
+    h2.style.fontFamily = "var(--mono)";
+    h2.style.fontSize = "16px";
+    h2.style.borderBottom = "1px dashed #000000";
+    h2.style.paddingBottom = "4px";
+    h2.style.textTransform = "uppercase";
+    section2.appendChild(h2);
+
+    const table2 = document.createElement('table');
+    table2.style.width = "100%";
+    table2.style.borderCollapse = "collapse";
+    table2.style.marginTop = "15px";
+    table2.innerHTML = `
+      <thead>
+        <tr style="border-bottom: 1px solid #000000; font-size: 11px;">
+          <th style="text-align: left; padding: 6px; font-family: var(--mono);">MAT CODE</th>
+          <th style="text-align: left; padding: 6px; font-family: var(--mono);">SIZE</th>
+          <th style="text-align: left; padding: 6px; font-family: var(--mono);">DESCRIPTION</th>
+          <th style="text-align: center; padding: 6px; font-family: var(--mono);">QTY</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${kitInt.map(item => `
+          <tr style="border-bottom: 1px solid #e0e0e0; font-size: 11px;">
+            <td style="padding: 6px; font-family: var(--mono);">${item.code || '—'}</td>
+            <td style="padding: 6px; font-family: var(--mono);">${item.size || '—'}</td>
+            <td style="padding: 6px; font-family: var(--mono);">${item.desc}</td>
+            <td style="padding: 6px; text-align: center; font-family: var(--mono);">${item.qty || '—'}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+    section2.appendChild(table2);
+    printWindow.appendChild(section2);
+
+    // Run compile and download PDF options
+    const opt = {
+      margin:       15,
+      filename:     'mill-fitter-tool-kits.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(printWindow).save();
+  });
+
+  // Initial render
+  performGlobalSearch();
+
+  // Sidebar mobile toggler
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('sidebarToggle');
   toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
@@ -370,6 +575,5 @@
     }
   });
 </script>
-
 </body>
 </html>

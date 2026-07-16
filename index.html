@@ -97,6 +97,10 @@
   .app-view { display: none; }
   .app-view.active { display: block; }
 
+  /* Tabbed Visibility for Kit Sections */
+  .kit-section { display: none; padding-top: 8px; }
+  .kit-section.active { display: block; }
+
   /* Dashboard Home Layout */
   .home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 24px 0 32px; }
   .stat-card { background: #FAF9F5; border: 1px solid var(--line); border-radius: 6px; padding: 18px; border-top: 3px solid var(--steel); cursor: pointer; transition: transform 0.15s ease, box-shadow 0.15s ease; }
@@ -107,9 +111,6 @@
 
   /* Global Search Header Panel */
   .search-results-header { background: #EEF3F7; border: 1px solid #C8D7E3; border-radius: 6px; padding: 12px 16px; margin-bottom: 24px; font-size: 14px; }
-
-  .kit-section { padding-top: 8px; }
-  .kit-section + .kit-section { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--line); }
 
   /* Summary plate */
   .spec-plate {
@@ -217,22 +218,38 @@
   </div>
 </div>
 
+
 <div class="layout">
   
   <nav class="sidebar" id="sidebar" aria-label="Section navigation">
+    
+    <!-- 1. Home Link -->
     <div class="sidebar-section">
       <ul class="sidebar-list" style="padding-left: 0;">
         <li><a href="#home" id="nav-home" class="current" onclick="navigateTo('home')">🏠 Home Dashboard</a></li>
       </ul>
     </div>
+    
+    <!-- 2. Tool Kits Dropdown -->
     <details class="sidebar-section" open>
       <summary>Tool Kits</summary>
       <ul class="sidebar-list">
         <li><a href="#finishing" id="nav-finishing" onclick="navigateTo('kits', 'finishing')">Finishing Mill Fitter Box</a></li>
         <li><a href="#intermediate" id="nav-intermediate" onclick="navigateTo('kits', 'intermediate')">Intermediate Mill Fitter Box</a></li>
       </ul>
+    </details>
+
+    <!-- 3. TMT System Dropdown -->
+    <details class="sidebar-section" open>
+      <summary>TMT System</summary>
+      <ul class="sidebar-list">
+        <li><a href="#bolts" id="nav-bolts" onclick="navigateTo('kits', 'bolts')">TMT Bolts Details</a></li>
+      </ul>
     </details> 
+
   </nav>
+
+
 
   <main>
     <!-- ===================== HOMEPAGE VIEW ===================== -->
@@ -255,7 +272,11 @@
           <div class="val" id="home-count-int">10</div>
           <div class="desc">Standard tools cataloged</div>
         </div>
-        
+        <div class="stat-card" onclick="navigateTo('kits', 'bolts')">
+          <h3>TMT Bolts</h3>
+          <div class="val" id="home-count-bolts">6</div>
+          <div class="desc">Standard fasteners cataloged</div>
+        </div>
       </div>
 
       <div class="callout">
@@ -263,10 +284,13 @@
     </div>
 
     <!-- ===================== KITS VIEW ===================== -->
+  <!-- ===================== KITS VIEW ===================== -->
     <div id="view-kits" class="app-view">
       <div class="breadcrumb">
-        <a href="#" onclick="navigateTo('home')">Mill Docs</a><span class="sep">/</span>
-        <span class="current">Tool Kits Manifest</span>
+        <a href="#" onclick="navigateTo('home'); return false;">Mill Docs</a><span class="sep">/</span>
+        <!-- These two elements will now change dynamically based on where you click -->
+        <span id="crumb-parent">Tool Kits</span><span class="sep">/</span>
+        <span class="current" id="crumb-current">Tool Kits Manifest</span>
       </div>
 
       <div id="search-feedback" class="search-results-header" style="display: none;">
@@ -298,6 +322,20 @@
         </table>
         <div class="no-results" id="noResults-int">No matching items here.</div>
       </section>
+
+      <!-- TMT BOLTS DETAILS -->
+      <section class="kit-section" id="bolts">
+        <h2 class="kit-heading">TMT Bolts Details</h2>
+        
+        <table class="kit-table">
+          <thead>
+            <tr><th>Mat Code</th><th>Size</th><th>Description</th><th>Qty</th></tr>
+          </thead>
+          <tbody id="kitTableBody-bolts"></tbody>
+        </table>
+        <div class="no-results" id="noResults-bolts">No matching items here.</div>
+      </section>
+
     </div>
   </main>
 
@@ -312,6 +350,7 @@
       <li><a href="#home" onclick="navigateTo('home')">Return Home</a></li>
       <li><a href="#finishing" onclick="navigateTo('kits', 'finishing')">Finishing Box</a></li>
       <li><a href="#intermediate" onclick="navigateTo('kits', 'intermediate')">Intermediate Box</a></li>
+      <li><a href="#bolts" onclick="navigateTo('kits', 'bolts')">TMT Bolts Details</a></li>
     </ul>
     <div class="toc-title">Reference</div>
     <div class="toc-meta">
@@ -366,8 +405,18 @@
     { code: "8000000049", size: "Ø16mm x 4mtr", desc: "Wire Rope Sling", qty: "" }
   ];
 
+  const kitBolts = [
+    { code: "", size: "M16x65", desc: "Half Thread Bolt", qty: "" },
+    { code: "", size: "M16x85", desc: "Half Thread Bolt", qty: "" },
+    { code: "", size: "M12x35", desc: "Full Thread Bolt", qty: "" },
+    { code: "", size: "M16x85", desc: "20mm Thread Length", qty: "" },
+    { code: "", size: "M16x65", desc: "20mm Thread Length", qty: "" },
+    { code: "", size: "—",      desc: "All are High Tensile (HT) Bolts", qty: "", isSet: true }
+  ];
+
   document.getElementById('home-count-fin').innerText = kitFin.length;
   document.getElementById('home-count-int').innerText = kitInt.length;
+  document.getElementById('home-count-bolts').innerText = kitBolts.length;
 
   function highlight(text, query) {
     if (!text || !query) return text || '—';
@@ -416,6 +465,7 @@
 
     renderTable(kitFin, 'fin', query);
     renderTable(kitInt, 'int', query);
+    renderTable(kitBolts, 'bolts', query);
   }
 
   function navigateTo(viewId, targetElementId) {
@@ -425,17 +475,37 @@
     if (viewId === 'home') {
       document.getElementById('view-home').classList.add('active');
       document.getElementById('nav-home').classList.add('current');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (viewId === 'kits') {
       document.getElementById('view-kits').classList.add('active');
-      if (targetElementId) {
-        document.getElementById('nav-' + targetElementId).classList.add('current');
-        setTimeout(() => {
-          const target = document.getElementById(targetElementId);
-          if (target) target.scrollIntoView({ behavior: 'smooth' });
-        }, 50);
+      
+      // Hide all kit sections first
+      document.querySelectorAll('.kit-section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Default fallback if no target is specified
+      const target = targetElementId || 'finishing'; 
+      
+      // Show only the selected section
+      document.getElementById(target).classList.add('active');
+      document.getElementById('nav-' + target).classList.add('current');
+
+      // --- DYNAMIC BREADCRUMB UPDATE SYSTEM ---
+      const parentCrumb = document.getElementById('crumb-parent');
+      const currentCrumb = document.getElementById('crumb-current');
+
+      if (target === 'finishing') {
+        parentCrumb.textContent = "Tool Kits";
+        currentCrumb.textContent = "Finishing Mill Fitter Box";
+      } else if (target === 'intermediate') {
+        parentCrumb.textContent = "Tool Kits";
+        currentCrumb.textContent = "Intermediate Mill Fitter Box";
+      } else if (target === 'bolts') {
+        parentCrumb.textContent = "TMT System";
+        currentCrumb.textContent = "TMT Bolts Details";
       }
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   document.getElementById('globalSearch').addEventListener('input', performGlobalSearch);
@@ -447,16 +517,14 @@
 
   // Dynamic Plain PDF Generation Engine
   document.getElementById('exportPdfBtn').addEventListener('click', () => {
-    // 1. Build a clean, isolated document purely in JS memory
     const printWindow = document.createElement('div');
     printWindow.style.padding = '20px';
     printWindow.style.background = '#ffffff';
     printWindow.style.color = '#000000';
     printWindow.style.fontFamily = "var(--mono)";
 
-    // Document header styling
     const mainTitle = document.createElement('h1');
-    mainTitle.innerText = "MILL FITTER TOOL KITS MANIFEST";
+    mainTitle.innerText = "MILL FITTER TOOL KITS & BOLTS MANIFEST";
     mainTitle.style.fontFamily = "var(--mono)";
     mainTitle.style.fontSize = "22px";
     mainTitle.style.borderBottom = "2px solid #000000";
@@ -465,95 +533,64 @@
     mainTitle.style.textTransform = "uppercase";
     printWindow.appendChild(mainTitle);
 
-    // Section 1: Finishing Box
-    const section1 = document.createElement('div');
-    section1.style.marginBottom = "40px";
-    
-    const h1 = document.createElement('h2');
-    h1.innerText = "1. Finishing Mill Fitter Tool Box";
-    h1.style.fontFamily = "var(--mono)";
-    h1.style.fontSize = "16px";
-    h1.style.borderBottom = "1px dashed #000000";
-    h1.style.paddingBottom = "4px";
-    h1.style.textTransform = "uppercase";
-    section1.appendChild(h1);
+    function createPrintSection(title, data) {
+      const section = document.createElement('div');
+      section.style.marginBottom = "40px";
+      
+      const h = document.createElement('h2');
+      h.innerText = title;
+      h.style.fontFamily = "var(--mono)";
+      h.style.fontSize = "16px";
+      h.style.borderBottom = "1px dashed #000000";
+      h.style.paddingBottom = "4px";
+      h.style.textTransform = "uppercase";
+      section.appendChild(h);
 
-    const table1 = document.createElement('table');
-    table1.style.width = "100%";
-    table1.style.borderCollapse = "collapse";
-    table1.style.marginTop = "15px";
-    table1.innerHTML = `
-      <thead>
-        <tr style="border-bottom: 1px solid #000000; font-size: 11px;">
-          <th style="text-align: left; padding: 6px; font-family: var(--mono);">MAT CODE</th>
-          <th style="text-align: left; padding: 6px; font-family: var(--mono);">SIZE</th>
-          <th style="text-align: left; padding: 6px; font-family: var(--mono);">DESCRIPTION</th>
-          <th style="text-align: center; padding: 6px; font-family: var(--mono);">QTY</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${kitFin.map(item => `
-          <tr style="border-bottom: 1px solid #e0e0e0; font-size: 11px; ${item.isSet ? 'color: #555555;' : ''}">
-            <td style="padding: 6px; font-family: var(--mono);">${item.code || '—'}</td>
-            <td style="padding: 6px; font-family: var(--mono);">${item.size || '—'}</td>
-            <td style="padding: 6px; font-family: var(--mono);">${item.desc}</td>
-            <td style="padding: 6px; text-align: center; font-family: var(--mono);">${item.qty || '—'}</td>
+      const table = document.createElement('table');
+      table.style.width = "100%";
+      table.style.borderCollapse = "collapse";
+      table.style.marginTop = "15px";
+      table.innerHTML = `
+        <thead>
+          <tr style="border-bottom: 1px solid #000000; font-size: 11px;">
+            <th style="text-align: left; padding: 6px; font-family: var(--mono);">MAT CODE</th>
+            <th style="text-align: left; padding: 6px; font-family: var(--mono);">SIZE</th>
+            <th style="text-align: left; padding: 6px; font-family: var(--mono);">DESCRIPTION</th>
+            <th style="text-align: center; padding: 6px; font-family: var(--mono);">QTY</th>
           </tr>
-        `).join('')}
-      </tbody>
-    `;
-    section1.appendChild(table1);
-    printWindow.appendChild(section1);
+        </thead>
+        <tbody>
+          ${data.map(item => `
+            <tr style="border-bottom: 1px solid #e0e0e0; font-size: 11px; ${item.isSet ? 'color: #555555; font-style: italic;' : ''}">
+              <td style="padding: 6px; font-family: var(--mono);">${item.code || '—'}</td>
+              <td style="padding: 6px; font-family: var(--mono);">${item.size || '—'}</td>
+              <td style="padding: 6px; font-family: var(--mono);">${item.desc}</td>
+              <td style="padding: 6px; text-align: center; font-family: var(--mono);">${item.qty || '—'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+      section.appendChild(table);
+      return section;
+    }
 
-    // Page Break Element
-    const pageBreak = document.createElement('div');
-    pageBreak.style.pageBreakBefore = 'always';
-    printWindow.appendChild(pageBreak);
-
-    // Section 2: Intermediate Box
-    const section2 = document.createElement('div');
-    section2.style.marginTop = "30px";
+    printWindow.appendChild(createPrintSection("1. Finishing Mill Fitter Tool Box", kitFin));
     
-    const h2 = document.createElement('h2');
-    h2.innerText = "2. Intermediate Mill Fitter Tool Box";
-    h2.style.fontFamily = "var(--mono)";
-    h2.style.fontSize = "16px";
-    h2.style.borderBottom = "1px dashed #000000";
-    h2.style.paddingBottom = "4px";
-    h2.style.textTransform = "uppercase";
-    section2.appendChild(h2);
+    const pageBreak1 = document.createElement('div');
+    pageBreak1.style.pageBreakBefore = 'always';
+    printWindow.appendChild(pageBreak1);
 
-    const table2 = document.createElement('table');
-    table2.style.width = "100%";
-    table2.style.borderCollapse = "collapse";
-    table2.style.marginTop = "15px";
-    table2.innerHTML = `
-      <thead>
-        <tr style="border-bottom: 1px solid #000000; font-size: 11px;">
-          <th style="text-align: left; padding: 6px; font-family: var(--mono);">MAT CODE</th>
-          <th style="text-align: left; padding: 6px; font-family: var(--mono);">SIZE</th>
-          <th style="text-align: left; padding: 6px; font-family: var(--mono);">DESCRIPTION</th>
-          <th style="text-align: center; padding: 6px; font-family: var(--mono);">QTY</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${kitInt.map(item => `
-          <tr style="border-bottom: 1px solid #e0e0e0; font-size: 11px;">
-            <td style="padding: 6px; font-family: var(--mono);">${item.code || '—'}</td>
-            <td style="padding: 6px; font-family: var(--mono);">${item.size || '—'}</td>
-            <td style="padding: 6px; font-family: var(--mono);">${item.desc}</td>
-            <td style="padding: 6px; text-align: center; font-family: var(--mono);">${item.qty || '—'}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    `;
-    section2.appendChild(table2);
-    printWindow.appendChild(section2);
+    printWindow.appendChild(createPrintSection("2. Intermediate Mill Fitter Tool Box", kitInt));
+    
+    const pageBreak2 = document.createElement('div');
+    pageBreak2.style.pageBreakBefore = 'always';
+    printWindow.appendChild(pageBreak2);
 
-    // Run compile and download PDF options
+    printWindow.appendChild(createPrintSection("3. TMT Bolts Details", kitBolts));
+
     const opt = {
       margin:       15,
-      filename:     'mill-fitter-tool-kits.pdf',
+      filename:     'mill-fitter-manifest.pdf',
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true },
       jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }

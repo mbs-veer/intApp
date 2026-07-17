@@ -226,7 +226,7 @@
     <!-- 1. Home Link -->
     <div class="sidebar-section">
       <ul class="sidebar-list" style="padding-left: 0;">
-        <li><a href="#home" id="nav-home" class="current" onclick="navigateTo('home')">🏠 Home Dashboard</a></li>
+        <li><a href="#home" id="nav-home" class="current" onclick="navigateTo('home'); return false;">🏠 Home Dashboard</a></li>
       </ul>
     </div>
     
@@ -234,8 +234,8 @@
     <details class="sidebar-section" open>
       <summary>Tool Kits</summary>
       <ul class="sidebar-list">
-        <li><a href="#finishing" id="nav-finishing" onclick="navigateTo('kits', 'finishing')">Finishing Mill Fitter Box</a></li>
-        <li><a href="#intermediate" id="nav-intermediate" onclick="navigateTo('kits', 'intermediate')">Intermediate Mill Fitter Box</a></li>
+        <li><a href="#finishing" id="nav-finishing" onclick="navigateTo('kits', 'finishing'); return false;">Finishing Mill Fitter Box</a></li>
+        <li><a href="#intermediate" id="nav-intermediate" onclick="navigateTo('kits', 'intermediate'); return false;">Intermediate Mill Fitter Box</a></li>
       </ul>
     </details>
 
@@ -243,7 +243,7 @@
     <details class="sidebar-section" open>
       <summary>TMT System</summary>
       <ul class="sidebar-list">
-        <li><a href="#bolts" id="nav-bolts" onclick="navigateTo('kits', 'bolts')">TMT Bolts Details</a></li>
+          <li><a href="#bolts" id="nav-bolts" onclick="navigateTo('kits', 'bolts'); return false;">TMT Materials</a></li>
       </ul>
     </details> 
 
@@ -273,15 +273,13 @@
           <div class="desc">Standard tools cataloged</div>
         </div>
         <div class="stat-card" onclick="navigateTo('kits', 'bolts')">
-          <h3>TMT Bolts</h3>
+          <h3>TMT Materials</h3>
           <div class="val" id="home-count-bolts">6</div>
           <div class="desc">Standard fasteners cataloged</div>
         </div>
       </div>
 
-      <div class="callout">
-        <strong>Notice:</strong> Verify the stock every month</div>
-    </div>
+       </div>
 
     <!-- ===================== KITS VIEW ===================== -->
   <!-- ===================== KITS VIEW ===================== -->
@@ -325,7 +323,7 @@
 
       <!-- TMT BOLTS DETAILS -->
       <section class="kit-section" id="bolts">
-        <h2 class="kit-heading">TMT Bolts Details</h2>
+        <h2 class="kit-heading">TMT Materials</h2>
         
         <table class="kit-table">
           <thead>
@@ -347,10 +345,10 @@
       Export Minimal PDF
     </button>
     <ul class="toc-jump">
-      <li><a href="#home" onclick="navigateTo('home')">Return Home</a></li>
-      <li><a href="#finishing" onclick="navigateTo('kits', 'finishing')">Finishing Box</a></li>
-      <li><a href="#intermediate" onclick="navigateTo('kits', 'intermediate')">Intermediate Box</a></li>
-      <li><a href="#bolts" onclick="navigateTo('kits', 'bolts')">TMT Bolts Details</a></li>
+      <li><a href="#home" onclick="navigateTo('home'); return false;">Return Home</a></li>
+      <li><a href="#finishing" onclick="navigateTo('kits', 'finishing'); return false;">Finishing Box</a></li>
+      <li><a href="#intermediate" onclick="navigateTo('kits', 'intermediate'); return false;">Intermediate Box</a></li>
+      <li><a href="#bolts" onclick="navigateTo('kits', 'bolts'); return false;">TMT Materials</a></li>
     </ul>
     <div class="toc-title">Reference</div>
     <div class="toc-meta">
@@ -411,8 +409,48 @@
     { code: "", size: "M12x35", desc: "Full Thread Bolt", qty: "" },
     { code: "", size: "M16x85", desc: "20mm Thread Length", qty: "" },
     { code: "", size: "M16x65", desc: "20mm Thread Length", qty: "" },
-    { code: "", size: "—",      desc: "All are High Tensile (HT) Bolts", qty: "", isSet: true }
-  ];
+    { code: "", size: "—",      desc: "All are High Tensile (HT) Bolts", qty: "" },
+  { code: "4000026622", size: "8-12MM", desc: "TMT ENTRY GUIDE", qty: "" },
+  { code: "4000026623", size: "8-12MM", desc: "TMT NOZZLE I", qty: "" },
+  { code: "4000026624", size: "8-12MM", desc: "TMT FLOW GUIDE", qty: "" },
+  { code: "4000026625", size: "8-12MM", desc: "TMT NOZZLE II", qty: "" },
+  { code: "4000026626", size: "8-12MM", desc: "TMT GUIDE PIECES(INSERTS)", qty: "" },
+  { code: "4000026638", size: "8-12MM", desc: "TMT VENTURI GUIDE", qty: "" },
+  { code: "4000026639", size: "8-12MM", desc: "TMT DEFLECTION GUIDE", qty: "" },
+  { code: "4000026640", size: "8-12MM", desc: "TMT AIR NOZZLE", qty: "" },
+  { code: "4000026668", size: "8-12MM", desc: "TMT INTERNAL NOZZLES COMPLETE SET", qty: "" },
+  { code: "4000026642", size: "16MM", desc: "TMT ENTRY GUIDE", qty: "" },
+  { code: "4000026643", size: "16MM", desc: "TMT NOZZLE I", qty: "" },
+  { code: "4000026644", size: "16MM", desc: "TMT FLOW GUIDE", qty: "" },
+  { code: "4000026645", size: "16MM", desc: "TMT NOZZLE II", qty: "" },
+  { code: "4000026646", size: "16MM", desc: "TMT GUIDE PIECES(INSERTS)", qty: "" },
+  { code: "4000026647", size: "16MM", desc: "TMT VENTURI GUIDE", qty: "" },
+  { code: "4000026648", size: "16MM", desc: "TMT DEFLECTION GUIDE", qty: "" },
+  { code: "4000026649", size: "16MM", desc: "TMT AIR NOZZLE", qty: "" },
+  { code: "4000026669", size: "16MM", desc: "TMT INTERNAL NOZZLES COMPLETE SET", qty: "" },
+  { code: "4000026650", size: "20-32MM", desc: "TMT ENTRY GUIDE", qty: "" },
+  { code: "4000026652", size: "20-32MM", desc: "TMT NOZZLE I", qty: "" },
+  { code: "4000026653", size: "20-32MM", desc: "TMT FLOW GUIDE", qty: "" },
+  { code: "4000026654", size: "20-32MM", desc: "TMT NOZZLE II", qty: "" },
+  { code: "4000026655", size: "20-32MM", desc: "TMT GUIDE PIECES(INSERTS)", qty: "" },
+  { code: "4000026656", size: "20-32MM", desc: "TMT VENTURI GUIDE", qty: "" },
+  { code: "4000026657", size: "20-32MM", desc: "TMT DEFLECTION GUIDE", qty: "" },
+  { code: "4000026658", size: "20-32MM", desc: "TMT AIR NOZZLE", qty: "" },
+  { code: "4000026670", size: "20-32MM", desc: "TMT INTERNAL NOZZLES COMPLETE SET", qty: "" },
+  { code: "4000026659", size: "36-40MM", desc: "TMT ENTRY GUIDE", qty: "" },
+  { code: "4000026660", size: "36-40MM", desc: "TMT NOZZLE I", qty: "" },
+  { code: "4000026661", size: "36-40MM", desc: "TMT FLOW GUIDE", qty: "" },
+  { code: "4000026662", size: "36-40MM", desc: "TMT NOZZLE II", qty: "" },
+  { code: "4000026663", size: "36-40MM", desc: "TMT GUIDE PIECES(INSERTS)", qty: "" },
+  { code: "4000026664", size: "36-40MM", desc: "TMT VENTURI GUIDE", qty: "" },
+  { code: "4000026665", size: "36-40MM", desc: "TMT DEFLECTION GUIDE", qty: "" },
+  { code: "4000026666", size: "36-40MM", desc: "TMT AIR NOZZLE", qty: "" },
+  { code: "4000026667", size: "36-40MM", desc: "TMT INTERNAL NOZZLES COMPLETE SET", qty: "" },
+  { code: "4000026672", size: "8-12MM", desc: "TMT EXIT FUNNEL", qty: "" },
+  { code: "4000026673", size: "16MM", desc: "TMT EXIT FUNNEL", qty: "" },
+  { code: "4000026674", size: "20-32MM", desc: "TMT EXIT FUNNEL", qty: "" },
+  { code: "4000026675", size: "36-40MM", desc: "TMT EXIT FUNNEL", qty: "" }
+];
 
   document.getElementById('home-count-fin').innerText = kitFin.length;
   document.getElementById('home-count-int').innerText = kitInt.length;

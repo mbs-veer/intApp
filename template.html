@@ -1,0 +1,126 @@
+<!--
+  ==========================================================================
+  MILL DOCS — PAGE TEMPLATE
+
+  HOW TO ADD A NEW PAGE:
+  1. Copy this file, rename it (e.g. "roll-shop-tools.html").
+  2. Pick a short id for the page, e.g. "roll-shop". Set it in TWO places:
+       - <body data-page="roll-shop">   (below)
+       - assets/nav-config.js           (add a matching entry — see its
+                                          own header comment for the format)
+  3. Update <title>, the breadcrumb, and the <h1> below.
+  4. Fill in the <main> content. Two ready-made patterns are included:
+       A) Plain content (spec-plate, callout, prose) — already active.
+       B) A searchable parts/materials table, like the Tool Kits pages —
+          commented out below, uncomment and fill in KIT_DATA to use it.
+  5. Delete whichever pattern (A or B) you don't need.
+  That's it — the sidebar, topbar, and styling update automatically because
+  they're all pulled from the shared assets/ files.
+  ==========================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAGE TITLE — Mill Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<!-- Only needed if this page uses the searchable table pattern (B) below -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body data-page="SET_ID_HERE">
+
+<div class="topbar">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="index.html"><span class="mark"></span>Mill Docs <small>REBAR ROLLING · INTERNAL</small></a>
+  <!-- Only needed for pattern (B) — remove if this page has no table -->
+  <div class="topbar-search">
+    <input type="text" id="globalSearch" placeholder="Search this page…" aria-label="Search this page">
+  </div>
+</div>
+
+<div class="layout">
+
+  <nav class="sidebar" id="sidebar" aria-label="Section navigation"></nav>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="index.html">Mill Docs</a><span class="sep">/</span>
+      <span class="current">PAGE TITLE</span>
+    </div>
+
+    <h2 class="kit-heading">PAGE HEADING</h2>
+    <p class="lede">One or two sentences describing what this page covers.</p>
+
+    <!-- ============ PATTERN A: Plain content ============ -->
+    <div class="spec-plate">
+      <span class="rivet-tl"></span><span class="rivet-tr"></span><span class="rivet-bl"></span><span class="rivet-br"></span>
+      <div class="label">Spec Summary</div>
+      <dl class="spec-grid">
+        <div><dt>Field One</dt><dd>Value</dd></div>
+        <div><dt>Field Two</dt><dd>Value</dd></div>
+      </dl>
+    </div>
+
+    <div class="callout">
+      <strong>Note:</strong> Use callouts like this for safety notes or important context.
+    </div>
+
+    <!-- ============ PATTERN B: Searchable table (uncomment to use) ============
+    <div id="search-feedback" class="search-results-header" style="display:none;">
+      Search filter active — showing matches on this page. <a href="#" id="clearSearch" style="font-weight:600; margin-left:8px;">× Clear</a>
+    </div>
+    <table class="kit-table">
+      <thead>
+        <tr><th>Mat Code</th><th>Size</th><th>Description</th><th>Qty</th></tr>
+      </thead>
+      <tbody id="kitTableBody"></tbody>
+    </table>
+    <div class="no-results" id="noResults">No matching items here.</div>
+    -->
+
+  </main>
+
+  <aside class="toc" aria-label="Page info">
+    <div class="toc-title">Quick Actions</div>
+    <!-- Only needed for pattern (B) — remove if this page has no table -->
+    <button class="btn-pdf" id="exportPdfBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM80 224h96c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16zm224 0c8.8 0 16 7.2 16 16v96c0 8.8-7.2 16-16 16H224c-8.8 0-16-7.2-16-16V240c0-8.8 7.2-16 16-16h80z"/></svg>
+      Export Minimal PDF
+    </button>
+    <ul class="toc-jump">
+      <li><a href="index.html">Return Home</a></li>
+    </ul>
+    <div class="toc-title">Reference</div>
+    <div class="toc-meta">
+      <strong>Section Name</strong>
+      Short reference note.
+    </div>
+  </aside>
+
+</div>
+
+<script src="assets/nav-config.js"></script>
+<script src="assets/nav.js"></script>
+
+<!-- Only needed for pattern (B) — remove if this page has no table -->
+<script src="assets/kit-table.js"></script>
+<script>
+  /* ---- Pattern B example (delete if unused) ----
+  const KIT_DATA = [
+    { code: "0000000000", size: "—", desc: "Example item", qty: "1" }
+  ];
+  initKitPage({
+    data: KIT_DATA,
+    tbodyId: "kitTableBody",
+    noResultsId: "noResults",
+    pdfBtnId: "exportPdfBtn",
+    pdfTitle: "PAGE TITLE"
+  });
+  */
+</script>
+</body>
+</html>

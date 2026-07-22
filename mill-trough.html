@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Channel & Plate Dimensions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
+  :root{
+    --graphite-950:#15171a;
+    --graphite-900:#1c1f23;
+    --graphite-800:#24282e;
+    --graphite-700:#31363d;
+    --steel-500:#5b6b7a;
+    --steel-300:#9aabb8;
+    --steel-100:#dbe3e8;
+    --hazard:#f4b400;
+    --hazard-dim:#8a6a10;
+    --paper:#eceef0;
+    --pipe:#3a4a52;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--graphite-950);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    padding:32px 20px 80px;
+  }
+
+  .wrap{max-width:1180px;margin:0 auto;}
+
+  header{
+    border-bottom:3px solid var(--hazard);
+    padding-bottom:16px;
+    margin-bottom:28px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  header h1{
+    margin:0;
+    font-size:1.5rem;
+    font-weight:700;
+    letter-spacing:.02em;
+  }
+  header .tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.75rem;
+    color:var(--hazard);
+    background:var(--graphite-800);
+    border:1px solid var(--steel-700, var(--steel-500));
+    padding:4px 10px;
+    border-radius:3px;
+    letter-spacing:.05em;
+  }
+
+  .section-plate{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:36px 0 14px;
+  }
+  .section-plate .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:700;
+    font-size:.8rem;
+    color:var(--graphite-950);
+    background:var(--hazard);
+    padding:5px 10px;
+    border-radius:2px;
+  }
+  .section-plate h2{
+    margin:0;
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:.03em;
+    color:var(--steel-100);
+    text-transform:uppercase;
+  }
+  .section-plate .rule{
+    flex:1;
+    height:1px;
+    background:linear-gradient(to right,var(--steel-500),transparent);
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--graphite-900);
+    border:1px solid var(--graphite-700);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  thead th{
+    background:var(--graphite-800);
+    color:var(--steel-300);
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:600;
+    padding:10px 12px;
+    border-bottom:2px solid var(--hazard);
+    text-align:left;
+    white-space:nowrap;
+  }
+  thead th.group-side,thead th.group-bottom,thead th.group-top{
+    text-align:center;
+  }
+  tbody td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--graphite-700);
+    font-size:.85rem;
+    color:var(--paper);
+    white-space:nowrap;
+  }
+  tbody tr:hover td{background:var(--graphite-800);}
+  tbody tr:last-child td{border-bottom:none;}
+
+  td.loc, th.loc{
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    color:var(--hazard);
+    letter-spacing:.02em;
+  }
+  td.dim, td.mm{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--steel-100);
+  }
+  td.center, th.center{text-align:center;}
+  td.na{color:var(--steel-500);text-align:center;}
+
+  tr.pipe-row td.dim{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--steel-100);
+  }
+  tr.pipe-row .pipe-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    font-weight:700;
+    color:var(--paper);
+    background:var(--pipe);
+    padding:2px 8px;
+    border-radius:2px;
+    letter-spacing:.05em;
+    margin-right:8px;
+  }
+
+  .subhead{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.7rem;
+    color:var(--steel-300);
+    letter-spacing:.04em;
+  }
+
+  colgroup col.divider{background:var(--graphite-700);width:2px;}
+
+  @media(max-width:820px){
+    table{display:block;overflow-x:auto;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Channel &amp; Plate Dimensions</h1>
+    <span class="tag">SIDE / BOTTOM / TOP PLATE SPEC</span>
+  </header>
+
+  <!-- MILL -->
+  <div class="section-plate">
+    <span class="num">01</span>
+    <h2>Mill</h2>
+    <span class="rule"></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Sl No</th>
+        <th class="loc">Location</th>
+        <th class="center">No. of Channels</th>
+        <th class="group-side" colspan="2">Side Plate</th>
+        <th class="group-bottom" colspan="2">Bottom Plate</th>
+        <th class="group-top" colspan="2">Top Plate</th>
+      </tr>
+      <tr>
+        <th></th><th></th><th></th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td class="loc">K17-K16</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1000×210</td><td class="center mm">20</td><td class="dim">1000×240</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>2</td><td class="loc">K16-K15</td><td class="center">1</td><td class="center mm">20</td><td class="dim">2020×200</td><td class="center mm">20</td><td class="dim">2020×270</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>3</td><td class="loc">K15-K14</td><td class="center">1</td><td class="center mm">20</td><td class="dim">3485×200</td><td class="center mm">20</td><td class="dim">3485×270</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>4</td><td class="loc">K15-K14</td><td class="center">1</td><td class="center mm">20</td><td class="dim">2500×200</td><td class="center mm">20</td><td class="dim">2500×270</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>5</td><td class="loc">K14-K13</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1020×200</td><td class="center mm">20</td><td class="dim">1020×260</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>6</td><td class="loc">K13-K12</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1060×200</td><td class="center mm">20</td><td class="dim">1060×380</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>7</td><td class="loc">K12-K11</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1100×200</td><td class="center mm">20</td><td class="dim">1100×260</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>8</td><td class="loc">K10-K09</td><td class="center">1</td><td class="center mm">20</td><td class="dim">900×200</td><td class="center mm">20</td><td class="dim">900×260</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>9</td><td class="loc">K09-K08</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1000×180</td><td class="center mm">20</td><td class="dim">1000×260</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>10</td><td class="loc">K08-K07</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1150×180</td><td class="center mm">20</td><td class="dim">1150×240</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>11</td><td class="loc">K06-K05</td><td class="center">1</td><td class="center mm">20</td><td class="dim">380×180</td><td class="center mm">20</td><td class="dim">380×180</td><td class="na">—</td><td class="na">—</td></tr>
+      <tr><td>12</td><td class="loc">K04-K03</td><td class="center">1</td><td class="center mm">20</td><td class="dim">380×180</td><td class="center mm">20</td><td class="dim">380×250</td><td class="center mm">10</td><td class="dim">100×300</td></tr>
+      <tr><td>13</td><td class="loc">K02-K01</td><td class="center">3</td><td class="center mm">20</td><td class="dim">620×180</td><td class="center mm">20</td><td class="dim">620×250</td><td class="center mm">10</td><td class="dim">100×300</td></tr>
+      <tr><td>14</td><td class="loc">K02-K01</td><td class="center">4</td><td class="center mm">12</td><td class="dim">620×180</td><td class="center mm">20</td><td class="dim">620×250</td><td class="center mm">10</td><td class="dim">100×300</td></tr>
+    </tbody>
+  </table>
+
+  <!-- BYPASS -->
+  <div class="section-plate">
+    <span class="num">02</span>
+    <h2>Bypass</h2>
+    <span class="rule"></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Sl No</th>
+        <th class="loc">Location</th>
+        <th class="center">No. of Channels</th>
+        <th class="group-side" colspan="2">Side Plate</th>
+        <th class="group-bottom" colspan="2">Bottom Plate</th>
+        <th class="group-top" colspan="2">Top Plate</th>
+      </tr>
+      <tr>
+        <th></th><th></th><th></th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td class="loc">K6</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1795×250</td><td class="center mm">20</td><td class="dim">1795×260</td><td class="center mm">10</td><td class="dim">300×800</td></tr>
+      <tr><td>5</td><td class="loc">K5</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1660×250</td><td class="center mm">20</td><td class="dim">1660×260</td><td class="center mm">10</td><td class="dim">300×800</td></tr>
+      <tr class="pipe-row"><td>8</td><td class="loc">K4</td><td class="center" colspan="7"><span class="pipe-tag">PIPE</span><span class="dim">Length: 1880mm · ID-62.5 / OD-83.5</span></td></tr>
+      <tr class="pipe-row"><td>13</td><td class="loc">K3</td><td class="center" colspan="7"><span class="pipe-tag">PIPE</span><span class="dim">Length: 1475mm · ID-62.5 / OD-83.5</span></td></tr>
+      <tr class="pipe-row"><td>14</td><td class="loc">K2</td><td class="center" colspan="7"><span class="pipe-tag">PIPE</span><span class="dim">Length: 1670mm · ID-62.5 / OD-83.5</span></td></tr>
+      <tr class="pipe-row"><td>15</td><td class="loc">K1</td><td class="center" colspan="7"><span class="pipe-tag">PIPE</span><span class="dim">Length: 1595mm · ID-62.5 / OD-83.5</span></td></tr>
+    </tbody>
+  </table>
+
+  <!-- SHEAR 1 -->
+  <div class="section-plate">
+    <span class="num">03</span>
+    <h2>Shear 1</h2>
+    <span class="rule"></span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Sl No</th>
+        <th class="loc">Location</th>
+        <th class="center">No. of Channels</th>
+        <th class="group-side" colspan="2">Side Plate</th>
+        <th class="group-bottom" colspan="2">Bottom Plate</th>
+        <th class="group-top" colspan="2">Top Plate</th>
+      </tr>
+      <tr>
+        <th></th><th></th><th></th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+        <th class="center subhead">Thk (mm)</th><th class="center subhead">Dim (mm)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td class="loc">SH-1 ENTRY</td><td class="center">1</td><td class="center mm">20</td><td class="dim">1605×280</td><td class="center mm">20</td><td class="dim">1605×280</td><td class="na">—</td><td class="na">—</td></tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

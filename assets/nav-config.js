@@ -19,8 +19,10 @@ const NAV_CONFIG = [
     label: "Tool Kits",
     open: true,
     items: [
-      { id: "finishing",    label: "Finishing Mill Fitter Box",    href: "finishing-mill.html" },
-      { id: "intermediate", label: "Intermediate Mill Fitter Box", href: "intermediate-mill.html" }
+       { id: "finishing",    label: "Roughing Mill Fitter Box",    href: "roughing-mill.html" },
+    
+      { id: "intermediate", label: "Intermediate Mill Fitter Box", href: "intermediate-mill.html" },
+         { id: "finishing",    label: "Finishing Mill Fitter Box",    href: "finishing-mill.html" }
     ]
   },
   {
@@ -32,6 +34,14 @@ const NAV_CONFIG = [
     ]
   }
 
+    {
+    type: "group",
+    label: "Pinch Roll",
+    open: true,
+    items: [
+      { id: "bolts", label: "Pinch Roll Guides", href: "pinch-roll-funnel-parts.html" }
+    ]
+  }
   /* Example — adding a brand-new section:
   {
     type: "group",

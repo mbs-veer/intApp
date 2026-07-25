@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pinch Roll Funnel Parts — Reference</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Sora:wght@600;650;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-top: #f6f8fd; --bg-bottom: #e9edf9;
+  --surface: #ffffff; --surface-soft: #f3f5fb;
+  --border: #e2e6f2; --text: #1c2333; --text-muted: #5c6479; --text-faint: #8b93a8;
+  --accent: #3454ff; --accent-soft: #ecefff; --accent-hover: #2743e0;
+  --radius: 10px; --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --sans: "Inter", -apple-system, sans-serif; --display: "Sora", var(--sans);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: var(--sans); color: var(--text);
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%) fixed;
+  min-height: 100vh; font-size: 15px; line-height: 1.6;
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 48px 24px 100px; }
+.page-eyebrow {
+  font-family: var(--mono); font-size: 12px; color: var(--accent);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+}
+h1 {
+  font-family: var(--display); font-size: 30px; font-weight: 650;
+  letter-spacing: -0.015em; margin: 0 0 10px;
+}
+.lede { font-size: 15.5px; color: var(--text-muted); margin: 0 0 28px; max-width: 620px; }
+.table-search { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.table-search input {
+  flex: 1; font-family: var(--sans); font-size: 13px; padding: 9px 14px;
+  border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text);
+}
+.table-search input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.table-meta { font-size: 12px; color: var(--text-faint); margin-bottom: 14px; }
+.table-wrap {
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; background: var(--surface);
+}
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+thead th {
+  background: var(--surface-soft); text-align: left; font-weight: 600;
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--text-muted); padding: 11px 14px; border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--accent-soft); }
+td.code { font-family: var(--mono); font-size: 12.5px; color: var(--text); white-space: nowrap; }
+td.desc { font-weight: 500; }
+td.drawing { font-family: var(--mono); font-size: 12.5px; color: var(--text-muted); white-space: nowrap; }
+.footer-note { margin-top: 24px; font-size: 12.5px; color: var(--text-faint); }
+@media print {
+  body { background: #fff; }
+  @page { size: landscape; margin: 14mm; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="page-eyebrow">Reference · Pinch Roll</div>
+  <h1>Pinch Roll Funnel Parts</h1>
+  <p class="lede">SAP material codes, descriptions, and drawing references for pinch roll entry/exit funnels, funnel holders, and the funnel C-clamp.</p>
+
+  <div class="table-search">
+    <input type="text" id="filter-input" placeholder="Filter by code, description, or drawing…">
+  </div>
+  <div class="table-meta" id="filter-meta">10 of 10 rows</div>
+
+  <div class="table-wrap">
+    <table id="parts-table">
+      <thead>
+        <tr>
+          <th>SAP Material Code</th>
+          <th>Material Description</th>
+          <th>Drawing Reference</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="code">4000027600</td><td class="desc">Pinch Roll Left Entry Funnel Holder</td><td class="drawing">AGSI/RM/PROD/17</td></tr>
+        <tr><td class="code">4000027601</td><td class="desc">Pinch Roll Left Exit Funnel Holder</td><td class="drawing">AGSI/RM/PROD/18</td></tr>
+        <tr><td class="code">4000027602</td><td class="desc">Pinch Roll Right Entry Funnel Holder</td><td class="drawing">AGSI/RM/PROD/24</td></tr>
+        <tr><td class="code">4000027603</td><td class="desc">Pinch Roll Right Exit Funnel Holder</td><td class="drawing">AGSI/RM/PROD/25</td></tr>
+        <tr><td class="code">4000027604</td><td class="desc">Pinch Roll Entry Funnel 1</td><td class="drawing">AGSI/RM/PROD/19</td></tr>
+        <tr><td class="code">4000027605</td><td class="desc">Pinch Roll Entry Funnel 2</td><td class="drawing">AGSI/RM/PROD/21</td></tr>
+        <tr><td class="code">4000027606</td><td class="desc">Pinch Roll Entry Funnel 3</td><td class="drawing">AGSI/RM/PROD/22</td></tr>
+        <tr><td class="code">4000027607</td><td class="desc">Pinch Roll Exit Funnel 1</td><td class="drawing">AGSI/RM/PROD/20</td></tr>
+        <tr><td class="code">4000027608</td><td class="desc">Pinch Roll Exit Funnel 2</td><td class="drawing">AGSI/RM/PROD/23</td></tr>
+        <tr><td class="code">4000027609</td><td class="desc">Pinch Roll Funnel C Clamp</td><td class="drawing">AGSI/RM/PROD/16</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="footer-note">10 items · Pinch roll entry/exit funnel assembly</p>
+</div>
+
+<script>
+const input = document.getElementById('filter-input');
+const meta = document.getElementById('filter-meta');
+const rows = document.querySelectorAll('#parts-table tbody tr');
+input.addEventListener('input', () => {
+  const q = input.value.trim().toLowerCase();
+  let visible = 0;
+  rows.forEach(row => {
+    const match = row.textContent.toLowerCase().includes(q);
+    row.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  meta.textContent = `${visible} of ${rows.length} rows`;
+});
+</script>
+</body>
+</html>

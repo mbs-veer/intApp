@@ -32,7 +32,7 @@ const NAV_CONFIG = [
     items: [
       { id: "bolts", label: "TMT Materials", href: "tmt-materials.html" }
     ]
-  }
+  },
 
     {
     type: "group",

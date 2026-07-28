@@ -40,7 +40,12 @@
 
     <table class="kit-table">
       <thead>
-        <tr><th>Mat Code</th><th>Description</th><th>Drawing</th><th>Additional Material Description</th></tr>
+        <tr>
+          <th>Mat Code</th>
+          <th>Description</th>
+          <th>Drawing</th>
+          <th>Additional Material Description</th>
+        </tr>
       </thead>
       <tbody id="kitTableBody"></tbody>
     </table>
@@ -72,16 +77,66 @@
 <script src="assets/kit-table.js"></script>
 <script>
   const PARTS_DATA = [
-    { code: "4000027600", desc: "Pinch Roll Left Entry Funnel Holder", drawing: "AGSI/RM/PROD/17", extra: "Material: EN19 hardened to 35HRC" },
-    { code: "4000027601", desc: "Pinch Roll Left Exit Funnel Holder", drawing: "AGSI/RM/PROD/18", extra: "Material: EN19 hardened to 35HRC" },
-    { code: "4000027602", desc: "Pinch Roll Right Entry Funnel Holder", drawing: "AGSI/RM/PROD/24", extra: "Material: EN19 hardened to 35HRC" },
-    { code: "4000027603", desc: "Pinch Roll Right Exit Funnel Holder", drawing: "AGSI/RM/PROD/25", extra: "Material: EN19 hardened to 35HRC" },
-    { code: "4000027604", desc: "Pinch Roll Entry Funnel 1", drawing: "AGSI/RM/PROD/19", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
-    { code: "4000027605", desc: "Pinch Roll Entry Funnel 2", drawing: "AGSI/RM/PROD/21", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
-    { code: "4000027606", desc: "Pinch Roll Entry Funnel 3", drawing: "AGSI/RM/PROD/22", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
-    { code: "4000027607", desc: "Pinch Roll Exit Funnel 1", drawing: "AGSI/RM/PROD/20", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
-    { code: "4000027608", desc: "Pinch Roll Exit Funnel 2", drawing: "AGSI/RM/PROD/23", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
-    { code: "4000027609", desc: "Pinch Roll Funnel C Clamp", drawing: "AGSI/RM/PROD/16", extra: "Material: ZG35 Steel" }
+    { 
+      code: "4000027600", 
+      desc: "Pinch Roll Left Entry Funnel Holder", 
+      drawing: "AGSI/RM/PROD/17", 
+      extra: "Material: EN19 hardened to 35HRC" 
+    },
+    { 
+      code: "4000027601", 
+      desc: "Pinch Roll Left Exit Funnel Holder", 
+      drawing: "AGSI/RM/PROD/18", 
+      extra: "Material: EN19 hardened to 35HRC" 
+    },
+    { 
+      code: "4000027602", 
+      desc: "Pinch Roll Right Entry Funnel Holder", 
+      drawing: "AGSI/RM/PROD/24", 
+      extra: "Material: EN19 hardened to 35HRC" 
+    },
+    { 
+      code: "4000027603", 
+      desc: "Pinch Roll Right Exit Funnel Holder", 
+      drawing: "AGSI/RM/PROD/25", 
+      extra: "Material: EN19 hardened to 35HRC" 
+    },
+    { 
+      code: "4000027604", 
+      desc: "Pinch Roll Entry Funnel 1", 
+      drawing: "AGSI/RM/PROD/19", 
+      extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" 
+    },
+    { 
+      code: "4000027605", 
+      desc: "Pinch Roll Entry Funnel 2", 
+      drawing: "AGSI/RM/PROD/21", 
+      extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" 
+    },
+    { 
+      code: "4000027606", 
+      desc: "Pinch Roll Entry Funnel 3", 
+      drawing: "AGSI/RM/PROD/22", 
+      extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" 
+    },
+    { 
+      code: "4000027607", 
+      desc: "Pinch Roll Exit Funnel 1", 
+      drawing: "AGSI/RM/PROD/20", 
+      extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" 
+    },
+    { 
+      code: "4000027608", 
+      desc: "Pinch Roll Exit Funnel 2", 
+      drawing: "AGSI/RM/PROD/23", 
+      extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" 
+    },
+    { 
+      code: "4000027609", 
+      desc: "Pinch Roll Funnel C Clamp", 
+      drawing: "AGSI/RM/PROD/16", 
+      extra: "Material: ZG35 Steel" 
+    }
   ];
 
   initKitPage({

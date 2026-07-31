@@ -1,11 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMT Materials — Mill Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<style>
 /* ======================================================================
-   MILL DOCS — AIRBNB DESIGN SYSTEM
+   MILL DOCS — AIRBNB DESIGN SYSTEM (EMBEDDED STYLES)
    ====================================================================== */
 :root {
-  /* Airbnb Core Brand Colors */
   --rausch: #FF385C;
   --rausch-dark: #E00B41;
-  --babu: #00A699;
   --hof: #484848;
   --foggy: #767676;
   --light-gray: #F7F7F7;
@@ -13,13 +23,12 @@
   --paper: #FFFFFF;
   --ink: #222222;
   
-  /* System Tokens mapped to Airbnb Palette */
-  --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
-  --sans: Circular, -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
+  --mono: 'Roboto Mono', ui-monospace, Menlo, monospace;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
   --display: var(--sans);
   
-  --sidebar-w: 280px;
-  --toc-w: 260px;
+  --sidebar-w: 260px;
+  --toc-w: 250px;
   --radius-sm: 8px;
   --radius-lg: 16px;
   --radius-pill: 30px;
@@ -42,7 +51,7 @@ body {
 
 a { color: var(--ink); text-decoration: none; }
 a:hover { text-decoration: underline; }
-a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visible {
+a:focus-visible, button:focus-visible, input:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 2px;
 }
@@ -113,16 +122,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
-.topbar-search input:hover {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.18);
-}
-
-.topbar-search input:focus { 
-  border-color: var(--ink); 
-  outline: none; 
-  box-shadow: var(--shadow-md);
-}
-
+.topbar-search input:hover { box-shadow: 0 2px 4px rgba(0,0,0,0.18); }
+.topbar-search input:focus { border-color: var(--ink); outline: none; box-shadow: var(--shadow-md); }
 .topbar-search input::placeholder { color: var(--foggy); }
 
 .topbar-search::before {
@@ -155,7 +156,7 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
 .layout { 
   display: grid; 
   grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--toc-w); 
-  max-width: 1280px; 
+  max-width: 1300px; 
   margin: 0 auto; 
   padding: 0 24px;
 }
@@ -170,34 +171,35 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   overflow-y: auto; 
 }
 
-.sidebar-section { margin-bottom: 16px; }
-
-.sidebar-section > summary {
-  list-style: none; 
-  cursor: pointer; 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between;
-  padding: 10px 12px; 
-  border-radius: var(--radius-sm);
-  font-family: var(--sans); 
-  font-weight: 600; 
-  font-size: 13px; 
-  color: var(--ink);
+.toc-callout {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #FFF7F0;
+  border: 1px solid #F5C0A7;
+  color: #8A4B12;
+  font-size: 13px;
+  line-height: 1.5;
 }
 
-.sidebar-section > summary::-webkit-details-marker { display: none; }
-.sidebar-section > summary::after { 
-  content: '›'; 
-  font-size: 16px; 
+.toc-callout strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #A65A1C;
+}
+
+.sidebar-section { margin-bottom: 20px; }
+.sidebar-section-title {
+  font-weight: 700; 
+  font-size: 12px; 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
   color: var(--foggy); 
-  transition: transform 0.2s ease; 
+  margin-bottom: 8px;
+  padding-left: 12px;
 }
-.sidebar-section[open] > summary::after { transform: rotate(90deg); }
-.sidebar-section > summary:hover { background: var(--light-gray); }
 
-.sidebar-list { list-style: none; margin: 4px 0 12px; padding: 0 0 0 12px; }
-.sidebar-list.top-level { padding-left: 0; }
+.sidebar-list { list-style: none; margin: 0; padding: 0; }
 .sidebar-list li { margin: 2px 0; }
 
 .sidebar-list a { 
@@ -231,48 +233,8 @@ main { padding: 32px 48px 100px; min-width: 0; }
 .breadcrumb .sep { color: var(--border-color); }
 .breadcrumb .current { color: var(--ink); font-weight: 600; }
 
-.status-badge {
-  display: inline-flex; 
-  align-items: center; 
-  gap: 6px; 
-  font-size: 12px; 
-  font-weight: 600;
-  padding: 4px 12px; 
-  border-radius: var(--radius-pill); 
-  background: #E8F5E9; 
-  color: #2E7D32; 
-  border: 1px solid #C8E6C9; 
-  margin-bottom: 16px;
-}
-.status-badge::before { content: '●'; font-size: 8px; }
+h2.kit-heading { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--ink); }
 
-h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px; color: var(--ink); }
-h2.kit-heading { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 12px; scroll-margin-top: 96px; }
-.lede { font-size: 16px; color: var(--foggy); max-width: 62ch; margin: 0 0 24px; line-height: 1.5; }
-
-/* Cards & Home Grid */
-.home-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin: 24px 0 32px; }
-
-.stat-card { 
-  display: block; 
-  background: var(--paper); 
-  border: 1px solid var(--border-color); 
-  border-radius: var(--radius-lg); 
-  padding: 24px; 
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease, transform 0.2s ease; 
-  cursor: pointer;
-}
-.stat-card:hover { 
-  transform: translateY(-2px); 
-  box-shadow: var(--shadow-hover); 
-  text-decoration: none; 
-}
-.stat-card h3 { margin: 0 0 8px; font-size: 12px; font-weight: 700; color: var(--foggy); text-transform: uppercase; letter-spacing: 0.04em; }
-.stat-card .val { font-size: 32px; font-weight: 800; color: var(--ink); }
-.stat-card .desc { font-size: 13px; color: var(--foggy); margin-top: 6px; }
-
-/* Search Alert */
 .search-results-header { 
   background: var(--light-gray); 
   border: 1px solid var(--border-color); 
@@ -283,34 +245,63 @@ h2.kit-heading { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; mar
   color: var(--ink);
 }
 
-/* Modernized Spec Card (Replacements for Steel Plate) */
-.spec-plate {
-  position: relative; 
-  background: var(--light-gray); 
-  color: var(--ink);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-lg); 
-  padding: 24px; 
-  margin: 24px 0; 
-  max-width: 68ch; 
+/* Category Headers inside Table */
+.category-row td {
+  background: var(--light-gray);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rausch-dark);
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
 }
-.spec-plate .rivet-tl, .spec-plate .rivet-tr, .spec-plate .rivet-bl, .spec-plate .rivet-br { display: none; }
-.spec-plate .label { text-transform: uppercase; letter-spacing: 0.06em; font-size: 11px; font-weight: 700; color: var(--rausch); margin-bottom: 12px; }
-.spec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px 20px; }
-.spec-grid dt { font-size: 11px; color: var(--foggy); text-transform: uppercase; font-weight: 600; }
-.spec-grid dd { margin: 2px 0 0; font-size: 14px; font-weight: 600; color: var(--ink); }
 
-.callout {
-  border-left: 4px solid var(--rausch); 
-  background: #FFF8F6; 
-  padding: 16px 20px;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0; 
-  max-width: 66ch; 
-  margin: 20px 0; 
-  font-size: 14px;
-  color: var(--ink);
+.table-block { margin: 0 0 20px; }
+.table-block .table-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rausch-dark);
+  margin-bottom: 8px;
 }
-.callout strong { color: var(--rausch-dark); }
+
+.fasteners-table {
+  margin-top: 0;
+}
+.fasteners-table thead th {
+  background: #FFF7F0;
+  color: #8A4B12;
+  border-bottom: 1px solid #F5C0A7;
+}
+.fasteners-table td {
+  border-bottom-color: #F5E1D0;
+}
+.fasteners-table tr:hover:not(.category-row) td {
+  background: #FFF9F4;
+}
+.fasteners-table td.code {
+  color: #8A4B12;
+}
+.fasteners-table td.size {
+  color: #A65A1C;
+}
+.fasteners-table .callout-note {
+  margin: 0;
+}
+
+.callout-note {
+  margin: 8px 0 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #FFF7F0;
+  border: 1px solid #F5C0A7;
+  color: #8A4B12;
+  font-size: 13px;
+  font-weight: 600;
+}
 
 .no-results { 
   display: none; 
@@ -324,8 +315,8 @@ h2.kit-heading { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; mar
 }
 .no-results.show { display: block; }
 
-/* Minimalist Table Design */
-.kit-table { width: 100%; max-width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0 12px; font-size: 14px; }
+/* Table Design */
+.kit-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0 12px; font-size: 14px; }
 .kit-table thead th {
   text-align: left; 
   font-weight: 700; 
@@ -335,19 +326,17 @@ h2.kit-heading { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; mar
   border-bottom: 1px solid var(--border-color); 
   white-space: nowrap;
 }
-.kit-table td { padding: 16px; border-bottom: 1px solid #EBEBEB; vertical-align: middle; }
-.kit-table tr:hover td { background: var(--light-gray); }
-.kit-table tr:last-child td { border-bottom: none; }
+.kit-table td { padding: 14px 16px; border-bottom: 1px solid #EBEBEB; vertical-align: middle; }
+.kit-table tr:hover:not(.category-row) td { background: var(--light-gray); }
 
-.kit-table td.code { font-family: var(--mono); font-size: 13px; color: var(--ink); font-weight: 600; width: 140px; white-space: nowrap; }
-.kit-table td.size { font-family: var(--sans); font-weight: 600; color: var(--hof); width: 100px; white-space: nowrap; }
+.kit-table td.code { font-family: var(--mono); font-size: 15px; color: var(--ink); font-weight: 700; width: 140px; white-space: nowrap; }
+.kit-table td.size { font-family: var(--sans); font-weight: 600; color: var(--hof); width: 110px; white-space: nowrap; }
 .kit-table td.desc { color: var(--ink); font-weight: 400; }
 .kit-table td.qty { font-family: var(--mono); text-align: center; width: 60px; color: var(--ink); font-weight: 600; }
-.kit-table td.qty.empty { color: var(--border-color); }
 
 mark { background: #FFE0E6; color: var(--rausch-dark); border-radius: 4px; padding: 2px 4px; font-weight: 600; }
 
-/* Right Aside / Toc Context */
+/* Right Sidebar / TOC */
 .toc { 
   padding: 32px 0 40px 24px; 
   position: sticky; 
@@ -358,39 +347,12 @@ mark { background: #FFE0E6; color: var(--rausch-dark); border-radius: 4px; paddi
   border-left: 1px solid #EBEBEB;
 }
 .toc-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--foggy); margin-bottom: 12px; }
-.toc-meta { font-size: 13px; color: var(--foggy); line-height: 1.5; }
-.toc-meta strong { color: var(--ink); display: block; font-size: 14px; margin-bottom: 4px; }
-.toc-meta .hint { margin-top: 20px; padding-top: 16px; border-top: 1px solid #EBEBEB; }
+.toc-list { list-style: none; margin: 0 0 24px; padding: 0; }
+.toc-list li { margin: 2px 0; }
+.toc-list a { display: block; padding: 7px 0; font-size: 14px; color: var(--hof); transition: color 0.2s ease, font-weight 0.2s ease; }
+.toc-list a:hover { color: var(--rausch); text-decoration: none; }
+.toc-list a.active { color: var(--rausch); font-weight: 700; }
 
-.toc-jump { list-style: none; margin: 0 0 24px; padding: 0; }
-.toc-jump li a { display: block; padding: 6px 0; font-size: 14px; color: var(--hof); }
-.toc-jump li a:hover { color: var(--ink); text-decoration: underline; }
-
-/* Airbnb Styled Primary Button */
-.btn-pdf {
-  display: inline-flex; 
-  align-items: center; 
-  justify-content: center; 
-  gap: 10px; 
-  width: 100%;
-  background: linear-gradient(135deg, #E00B41 0%, #FF385C 100%); 
-  color: #FFFFFF !important; 
-  font-family: var(--sans);
-  font-size: 14px; 
-  font-weight: 600; 
-  padding: 12px 20px; 
-  border: none; 
-  border-radius: var(--radius-sm); 
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: opacity 0.2s ease, transform 0.1s ease; 
-  margin-bottom: 24px;
-}
-.btn-pdf:hover { opacity: 0.95; text-decoration: none; }
-.btn-pdf:active { transform: scale(0.98); }
-.btn-pdf svg { fill: currentColor; width: 14px; height: 14px; }
-
-/* Responsiveness */
 @media (max-width: 1100px) { 
   .layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); } 
   .toc { display: none; } 
@@ -401,20 +363,285 @@ mark { background: #FFE0E6; color: var(--rausch-dark); border-radius: 4px; paddi
   .sidebar-toggle { display: inline-flex; align-items: center; justify-content: center; }
   .layout { grid-template-columns: 1fr; padding: 0 16px; }
   .sidebar {
-    position: fixed; 
-    left: 0; 
-    top: 64px; 
-    width: 85vw; 
-    max-width: 320px; 
-    background: var(--paper);
-    box-shadow: var(--shadow-md); 
-    transform: translateX(-100%); 
-    transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1); 
-    z-index: 40;
-    padding: 20px;
-    height: calc(100vh - 64px);
+    position: fixed; left: 0; top: 64px; width: 85vw; max-width: 320px; 
+    background: var(--paper); box-shadow: var(--shadow-md); 
+    transform: translateX(-100%); transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1); 
+    z-index: 40; padding: 20px; height: calc(100vh - 64px);
   }
   .sidebar.open { transform: translateX(0); }
   main { padding: 20px 8px 80px; }
-  h1 { font-size: 24px; }
 }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="index.html"><span class="mark"></span>Mill Docs</a>
+  <div class="topbar-search">
+    <input type="text" id="globalSearch" placeholder="Search materials or codes…" aria-label="Search page items">
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Left Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar" aria-label="Section navigation">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Navigation</div>
+      <ul class="sidebar-list">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="TMT-materials.html" class="current">TMT Materials</a></li>
+        <li><a href="finishing-mill.html">Finishing Box</a></li>
+        <li><a href="intermediate-mill.html">Intermediate Box</a></li>
+      </ul>
+    </div>
+
+  </nav>
+
+  <!-- Main Content Area -->
+  <main id="pdfContent">
+    <div class="breadcrumb">
+      <a href="index.html">Mill Docs</a><span class="sep">/</span>
+      <span>TMT System</span><span class="sep">/</span>
+      <span class="current">TMT Materials</span>
+    </div>
+
+    <div id="searchFeedback" class="search-results-header" style="display:none;">
+      Filtering by search terms. <a href="#" id="clearSearch" style="font-weight:600; margin-left:8px; color:var(--rausch-dark);">× Clear Filter</a>
+    </div>
+
+    <h2 class="kit-heading">TMT Materials & Components</h2>
+
+    <div id="categoryTables"></div>
+    
+    <div class="no-results" id="noResults">No matching items found.</div>
+  </main>
+
+  <!-- Right Aside Panel -->
+  <aside class="toc" aria-label="Section navigation">
+    <div class="toc-title">Sections</div>
+    <ul class="toc-list" id="sectionNav"></ul>
+    <div class="toc-callout">
+      <strong>Note</strong>
+      All the relevant drawings, including version history, are stored in the material code in SAP.
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  // Grouped and sorted dataset
+  const CATEGORIZED_DATA = [
+    {
+      category: "Fasteners & Hardware",
+      note: "All are High Tensile (HT) Bolts",
+      items: [
+        { code: "—", size: "M16x65", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M12x35", desc: "Full Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "20mm Thread Length", qty: "—" },
+        { code: "—", size: "M16x65", desc: "20mm Thread Length", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 8 - 12 MM",
+      items: [
+        { code: "4000026668", size: "8-12MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026622", size: "8-12MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026623", size: "8-12MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026624", size: "8-12MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026625", size: "8-12MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026626", size: "8-12MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026638", size: "8-12MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026639", size: "8-12MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026640", size: "8-12MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026672", size: "8-12MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 16 MM",
+      items: [
+             { code: "4000026669", size: "16MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026642", size: "16MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026643", size: "16MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026644", size: "16MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026645", size: "16MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026646", size: "16MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026647", size: "16MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026648", size: "16MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026649", size: "16MM", desc: "TMT Air Nozzle", qty: "—" },
+   
+        { code: "4000026673", size: "16MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 20 - 32 MM",
+      items: [
+         { code: "4000026670", size: "20-32MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026650", size: "20-32MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026652", size: "20-32MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026653", size: "20-32MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026654", size: "20-32MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026655", size: "20-32MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026656", size: "20-32MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026657", size: "20-32MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026658", size: "20-32MM", desc: "TMT Air Nozzle", qty: "—" },
+       
+        { code: "4000026674", size: "20-32MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 36 - 40 MM",
+      items: [
+        { code: "4000026667", size: "36-40MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026659", size: "36-40MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026660", size: "36-40MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026661", size: "36-40MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026662", size: "36-40MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026663", size: "36-40MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026664", size: "36-40MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026665", size: "36-40MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026666", size: "36-40MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026675", size: "36-40MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    }
+  ];
+
+  // Render Table Items
+  function renderTable(filter = '') {
+    const categoryTables = document.getElementById('categoryTables');
+    const sectionNav = document.getElementById('sectionNav');
+    const noResults = document.getElementById('noResults');
+    const searchFeedback = document.getElementById('searchFeedback');
+    
+    categoryTables.innerHTML = '';
+    sectionNav.innerHTML = '';
+    let visibleCount = 0;
+    const query = filter.toLowerCase().trim();
+
+    if (query) {
+      searchFeedback.style.display = 'block';
+    } else {
+      searchFeedback.style.display = 'none';
+    }
+
+    CATEGORIZED_DATA.forEach(group => {
+      const isFastenersGroup = group.category === 'Fasteners & Hardware';
+      const matchingItems = group.items.filter(item => 
+        item.code.toLowerCase().includes(query) ||
+        (item.size && item.size.toLowerCase().includes(query)) ||
+        item.desc.toLowerCase().includes(query)
+      );
+
+      if (matchingItems.length > 0) {
+        const block = document.createElement('div');
+        block.className = 'table-block';
+
+        const title = document.createElement('div');
+        title.className = 'table-title';
+        title.id = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        title.textContent = group.category;
+        block.appendChild(title);
+
+        const navItem = document.createElement('li');
+        navItem.innerHTML = `<a href="#${title.id}">${group.category}</a>`;
+        sectionNav.appendChild(navItem);
+
+        const table = document.createElement('table');
+        table.className = isFastenersGroup ? 'kit-table fasteners-table' : 'kit-table';
+
+        const thead = document.createElement('thead');
+        thead.innerHTML = isFastenersGroup
+          ? '<tr><th>Mat Code</th><th>Size</th><th>Description</th><th style="text-align:center;">Qty</th></tr>'
+          : '<tr><th>Mat Code</th><th>Description</th><th style="text-align:center;">Qty</th></tr>';
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+
+        matchingItems.forEach(item => {
+          visibleCount++;
+          const tr = document.createElement('tr');
+          let codeText = highlightMatch(item.code, query);
+          let descText = highlightMatch(item.desc, query);
+
+          tr.innerHTML = isFastenersGroup
+            ? `
+                <td class="code">${codeText}</td>
+                <td class="size">${highlightMatch(item.size, query)}</td>
+                <td class="desc">${descText}</td>
+                <td class="qty">${item.qty}</td>
+              `
+            : `
+                <td class="code">${codeText}</td>
+                <td class="desc">${descText}</td>
+                <td class="qty">${item.qty}</td>
+              `;
+
+          tbody.appendChild(tr);
+        });
+
+        if (group.note && (!query || group.note.toLowerCase().includes(query))) {
+          visibleCount++;
+          const calloutRow = document.createElement('tr');
+          calloutRow.innerHTML = isFastenersGroup
+            ? `<td colspan="4"><div class="callout-note">${highlightMatch(group.note, query)}</div></td>`
+            : `<td colspan="3"><div class="callout-note">${highlightMatch(group.note, query)}</div></td>`;
+          tbody.appendChild(calloutRow);
+        }
+
+        table.appendChild(tbody);
+        block.appendChild(table);
+        categoryTables.appendChild(block);
+      }
+    });
+
+    if (visibleCount === 0) {
+      noResults.classList.add('show');
+    } else {
+      noResults.classList.remove('show');
+    }
+  }
+
+  function highlightMatch(text, query) {
+    if (!query || text === '—') return text;
+    const reg = new RegExp(`(${query})`, 'gi');
+    return text.replace(reg, '<mark>$1</mark>');
+  }
+
+  // Live Search Event Listeners
+  document.getElementById('globalSearch').addEventListener('input', (e) => renderTable(e.target.value));
+  document.getElementById('clearSearch').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('globalSearch').value = '';
+    renderTable('');
+  });
+
+  // Sidebar Toggle (Mobile)
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // PDF Export Engine
+  const exportPdfBtn = document.getElementById('exportPdfBtn');
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener('click', () => {
+      const element = document.getElementById('pdfContent');
+      const opt = {
+        margin:       [0.4, 0.4, 0.4, 0.4],
+        filename:     'TMT_Materials_List.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    });
+  }
+
+  // Initial Load
+  renderTable();
+</script>
+</body>
+</html>

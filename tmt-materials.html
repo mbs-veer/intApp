@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMT Materials — Mill Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<style>
+/* ======================================================================
+   MILL DOCS — AIRBNB DESIGN SYSTEM (EMBEDDED STYLES)
+   ====================================================================== */
+:root {
+  --rausch: #FF385C;
+  --rausch-dark: #E00B41;
+  --hof: #484848;
+  --foggy: #767676;
+  --light-gray: #F7F7F7;
+  --border-color: #DDDDDD;
+  --paper: #FFFFFF;
+  --ink: #222222;
+  
+  --mono: 'Roboto Mono', ui-monospace, Menlo, monospace;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --display: var(--sans);
+  
+  --sidebar-w: 260px;
+  --toc-w: 250px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-pill: 30px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.12);
+  --shadow-hover: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+* { box-sizing: border-box; }
+
+body { 
+  margin: 0; 
+  font-family: var(--sans); 
+  color: var(--ink); 
+  background: var(--paper); 
+  font-size: 14px; 
+  line-height: 1.43;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--ink); text-decoration: none; }
+a:hover { text-decoration: underline; }
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Header / Topbar */
+.topbar {
+  height: 80px;
+  background: var(--paper);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid #EBEBEB;
+}
+
+.topbar .brand { 
+  font-family: var(--display); 
+  font-weight: 800; 
+  font-size: 18px; 
+  letter-spacing: -0.02em; 
+  display: flex; 
+  align-items: center; 
+  gap: 10px; 
+  color: var(--rausch);
+}
+
+.brand .mark { 
+  width: 12px; 
+  height: 12px; 
+  background: var(--rausch); 
+  border-radius: 50%; 
+  flex: none; 
+}
+
+.topbar .brand small { 
+  font-family: var(--sans); 
+  font-weight: 600; 
+  color: var(--foggy); 
+  font-size: 11px; 
+  letter-spacing: 0.04em; 
+  text-transform: uppercase;
+}
+
+/* Floating Search Bar */
+.topbar-search { 
+  margin-left: auto; 
+  display: flex; 
+  align-items: center; 
+  position: relative; 
+}
+
+.topbar-search input {
+  width: 300px; 
+  max-width: 40vw; 
+  background: var(--paper); 
+  border: 1px solid var(--border-color);
+  color: var(--ink); 
+  padding: 10px 16px 10px 40px; 
+  border-radius: var(--radius-pill); 
+  font-family: var(--sans); 
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.topbar-search input:hover { box-shadow: 0 2px 4px rgba(0,0,0,0.18); }
+.topbar-search input:focus { border-color: var(--ink); outline: none; box-shadow: var(--shadow-md); }
+.topbar-search input::placeholder { color: var(--foggy); }
+
+.topbar-search::before {
+  content: ''; 
+  position: absolute; 
+  left: 14px; 
+  top: 50%; 
+  width: 12px; 
+  height: 12px; 
+  transform: translateY(-50%);
+  border: 2px solid var(--rausch); 
+  border-radius: 50%; 
+  box-shadow: 3px 3px 0 -1.5px var(--rausch);
+}
+
+.sidebar-toggle { 
+  display: none; 
+  background: var(--paper); 
+  border: 1px solid var(--border-color); 
+  color: var(--ink); 
+  border-radius: 50%; 
+  width: 40px; 
+  height: 40px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  box-shadow: var(--shadow-sm);
+}
+
+/* Layout Frame */
+.layout { 
+  display: grid; 
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) var(--toc-w); 
+  max-width: 1300px; 
+  margin: 0 auto; 
+  padding: 0 24px;
+}
+
+/* Sidebar Navigation */
+.sidebar { 
+  border-right: 1px solid #EBEBEB; 
+  padding: 32px 24px 60px 0; 
+  height: calc(100vh - 80px); 
+  position: sticky; 
+  top: 80px; 
+  overflow-y: auto; 
+}
+
+.toc-callout {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #FFF7F0;
+  border: 1px solid #F5C0A7;
+  color: #8A4B12;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.toc-callout strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #A65A1C;
+}
+
+.sidebar-section { margin-bottom: 20px; }
+.sidebar-section-title {
+  font-weight: 700; 
+  font-size: 12px; 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
+  color: var(--foggy); 
+  margin-bottom: 8px;
+  padding-left: 12px;
+}
+
+.sidebar-list { list-style: none; margin: 0; padding: 0; }
+.sidebar-list li { margin: 2px 0; }
+
+.sidebar-list a { 
+  display: block; 
+  padding: 8px 12px; 
+  border-radius: var(--radius-sm); 
+  color: var(--hof); 
+  font-size: 14px; 
+  font-weight: 400;
+  transition: background 0.15s ease;
+}
+
+.sidebar-list a:hover { background: var(--light-gray); text-decoration: none; color: var(--ink); }
+.sidebar-list a.current { color: var(--ink); font-weight: 600; background: var(--light-gray); }
+
+/* Main Content Area */
+main { padding: 32px 48px 100px; min-width: 0; }
+
+.breadcrumb { 
+  font-size: 13px; 
+  font-weight: 500;
+  color: var(--foggy); 
+  margin-bottom: 20px; 
+  display: flex; 
+  flex-wrap: wrap; 
+  gap: 8px; 
+  align-items: center; 
+}
+.breadcrumb a { color: var(--foggy); }
+.breadcrumb a:hover { color: var(--ink); text-decoration: underline; }
+.breadcrumb .sep { color: var(--border-color); }
+.breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+h2.kit-heading { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 16px; color: var(--ink); }
+
+.search-results-header { 
+  background: var(--light-gray); 
+  border: 1px solid var(--border-color); 
+  border-radius: var(--radius-lg); 
+  padding: 14px 20px; 
+  margin-bottom: 24px; 
+  font-size: 14px; 
+  color: var(--ink);
+}
+
+/* Category Headers inside Table */
+.category-row td {
+  background: var(--light-gray);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rausch-dark);
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.table-block { margin: 0 0 20px; }
+.table-block .table-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rausch-dark);
+  margin-bottom: 8px;
+}
+
+.fasteners-table {
+  margin-top: 0;
+}
+.fasteners-table thead th {
+  background: #FFF7F0;
+  color: #8A4B12;
+  border-bottom: 1px solid #F5C0A7;
+}
+.fasteners-table td {
+  border-bottom-color: #F5E1D0;
+}
+.fasteners-table tr:hover:not(.category-row) td {
+  background: #FFF9F4;
+}
+.fasteners-table td.code {
+  color: #8A4B12;
+}
+.fasteners-table td.size {
+  color: #A65A1C;
+}
+.fasteners-table .callout-note {
+  margin: 0;
+}
+
+.callout-note {
+  margin: 8px 0 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #FFF7F0;
+  border: 1px solid #F5C0A7;
+  color: #8A4B12;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.no-results { 
+  display: none; 
+  padding: 48px 0; 
+  color: var(--foggy); 
+  font-size: 14px; 
+  text-align: center; 
+  background: var(--light-gray); 
+  border: 1px dashed var(--border-color); 
+  border-radius: var(--radius-lg); 
+}
+.no-results.show { display: block; }
+
+/* Table Design */
+.kit-table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 20px 0 12px; font-size: 14px; }
+.kit-table thead th {
+  text-align: left; 
+  font-weight: 700; 
+  font-size: 12px; 
+  color: var(--foggy); 
+  padding: 12px 16px; 
+  border-bottom: 1px solid var(--border-color); 
+  white-space: nowrap;
+}
+.kit-table td { padding: 14px 16px; border-bottom: 1px solid #EBEBEB; vertical-align: middle; }
+.kit-table tr:hover:not(.category-row) td { background: var(--light-gray); }
+
+.kit-table td.code { font-family: var(--mono); font-size: 15px; color: var(--ink); font-weight: 700; width: 140px; white-space: nowrap; }
+.kit-table td.size { font-family: var(--sans); font-weight: 600; color: var(--hof); width: 110px; white-space: nowrap; }
+.kit-table td.desc { color: var(--ink); font-weight: 400; }
+.kit-table td.qty { font-family: var(--mono); text-align: center; width: 60px; color: var(--ink); font-weight: 600; }
+
+mark { background: #FFE0E6; color: var(--rausch-dark); border-radius: 4px; padding: 2px 4px; font-weight: 600; }
+
+/* Right Sidebar / TOC */
+.toc { 
+  padding: 32px 0 40px 24px; 
+  position: sticky; 
+  top: 80px; 
+  height: calc(100vh - 80px); 
+  overflow-y: auto; 
+  font-size: 14px; 
+  border-left: 1px solid #EBEBEB;
+}
+.toc-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--foggy); margin-bottom: 12px; }
+.toc-list { list-style: none; margin: 0 0 24px; padding: 0; }
+.toc-list li { margin: 2px 0; }
+.toc-list a { display: block; padding: 7px 0; font-size: 14px; color: var(--hof); transition: color 0.2s ease, font-weight 0.2s ease; }
+.toc-list a:hover { color: var(--rausch); text-decoration: none; }
+.toc-list a.active { color: var(--rausch); font-weight: 700; }
+
+@media (max-width: 1100px) { 
+  .layout { grid-template-columns: var(--sidebar-w) minmax(0, 1fr); } 
+  .toc { display: none; } 
+}
+
+@media (max-width: 800px) {
+  .topbar { padding: 0 16px; height: 64px; }
+  .sidebar-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .layout { grid-template-columns: 1fr; padding: 0 16px; }
+  .sidebar {
+    position: fixed; left: 0; top: 64px; width: 85vw; max-width: 320px; 
+    background: var(--paper); box-shadow: var(--shadow-md); 
+    transform: translateX(-100%); transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1); 
+    z-index: 40; padding: 20px; height: calc(100vh - 64px);
+  }
+  .sidebar.open { transform: translateX(0); }
+  main { padding: 20px 8px 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+  <a class="brand" href="index.html"><span class="mark"></span>Mill Docs</a>
+  <div class="topbar-search">
+    <input type="text" id="globalSearch" placeholder="Search materials or codes…" aria-label="Search page items">
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- Left Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar" aria-label="Section navigation">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Navigation</div>
+      <ul class="sidebar-list">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="TMT-materials.html" class="current">TMT Materials</a></li>
+        <li><a href="finishing-mill.html">Finishing Box</a></li>
+        <li><a href="intermediate-mill.html">Intermediate Box</a></li>
+      </ul>
+    </div>
+
+  </nav>
+
+  <!-- Main Content Area -->
+  <main id="pdfContent">
+    <div class="breadcrumb">
+      <a href="index.html">Mill Docs</a><span class="sep">/</span>
+      <span>TMT System</span><span class="sep">/</span>
+      <span class="current">TMT Materials</span>
+    </div>
+
+    <div id="searchFeedback" class="search-results-header" style="display:none;">
+      Filtering by search terms. <a href="#" id="clearSearch" style="font-weight:600; margin-left:8px; color:var(--rausch-dark);">× Clear Filter</a>
+    </div>
+
+    <h2 class="kit-heading">TMT Materials & Components</h2>
+
+    <div id="categoryTables"></div>
+    
+    <div class="no-results" id="noResults">No matching items found.</div>
+  </main>
+
+  <!-- Right Aside Panel -->
+  <aside class="toc" aria-label="Section navigation">
+    <div class="toc-title">Sections</div>
+    <ul class="toc-list" id="sectionNav"></ul>
+    <div class="toc-callout">
+      <strong>Note</strong>
+      All the relevant drawings, including version history, are stored in the material code in SAP.
+    </div>
+  </aside>
+
+</div>
+
+<script>
+  // Grouped and sorted dataset
+  const CATEGORIZED_DATA = [
+    {
+      category: "Fasteners & Hardware",
+      note: "All are High Tensile (HT) Bolts",
+      items: [
+        { code: "—", size: "M16x65", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M12x35", desc: "Full Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "20mm Thread Length", qty: "—" },
+        { code: "—", size: "M16x65", desc: "20mm Thread Length", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 8 - 12 MM",
+      items: [
+        { code: "4000026668", size: "8-12MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026622", size: "8-12MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026623", size: "8-12MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026624", size: "8-12MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026625", size: "8-12MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026626", size: "8-12MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026638", size: "8-12MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026639", size: "8-12MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026640", size: "8-12MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026672", size: "8-12MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 16 MM",
+      items: [
+             { code: "4000026669", size: "16MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026642", size: "16MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026643", size: "16MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026644", size: "16MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026645", size: "16MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026646", size: "16MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026647", size: "16MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026648", size: "16MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026649", size: "16MM", desc: "TMT Air Nozzle", qty: "—" },
+   
+        { code: "4000026673", size: "16MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 20 - 32 MM",
+      items: [
+         { code: "4000026670", size: "20-32MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026650", size: "20-32MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026652", size: "20-32MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026653", size: "20-32MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026654", size: "20-32MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026655", size: "20-32MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026656", size: "20-32MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026657", size: "20-32MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026658", size: "20-32MM", desc: "TMT Air Nozzle", qty: "—" },
+       
+        { code: "4000026674", size: "20-32MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 36 - 40 MM",
+      items: [
+        { code: "4000026667", size: "36-40MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026659", size: "36-40MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026660", size: "36-40MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026661", size: "36-40MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026662", size: "36-40MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026663", size: "36-40MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026664", size: "36-40MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026665", size: "36-40MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026666", size: "36-40MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026675", size: "36-40MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    }
+  ];
+
+  // Render Table Items
+  function renderTable(filter = '') {
+    const categoryTables = document.getElementById('categoryTables');
+    const sectionNav = document.getElementById('sectionNav');
+    const noResults = document.getElementById('noResults');
+    const searchFeedback = document.getElementById('searchFeedback');
+    
+    categoryTables.innerHTML = '';
+    sectionNav.innerHTML = '';
+    let visibleCount = 0;
+    const query = filter.toLowerCase().trim();
+
+    if (query) {
+      searchFeedback.style.display = 'block';
+    } else {
+      searchFeedback.style.display = 'none';
+    }
+
+    CATEGORIZED_DATA.forEach(group => {
+      const isFastenersGroup = group.category === 'Fasteners & Hardware';
+      const matchingItems = group.items.filter(item => 
+        item.code.toLowerCase().includes(query) ||
+        (item.size && item.size.toLowerCase().includes(query)) ||
+        item.desc.toLowerCase().includes(query)
+      );
+
+      if (matchingItems.length > 0) {
+        const block = document.createElement('div');
+        block.className = 'table-block';
+
+        const title = document.createElement('div');
+        title.className = 'table-title';
+        title.id = group.category.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        title.textContent = group.category;
+        block.appendChild(title);
+
+        const navItem = document.createElement('li');
+        navItem.innerHTML = `<a href="#${title.id}">${group.category}</a>`;
+        sectionNav.appendChild(navItem);
+
+        const table = document.createElement('table');
+        table.className = isFastenersGroup ? 'kit-table fasteners-table' : 'kit-table';
+
+        const thead = document.createElement('thead');
+        thead.innerHTML = isFastenersGroup
+          ? '<tr><th>Mat Code</th><th>Size</th><th>Description</th><th style="text-align:center;">Qty</th></tr>'
+          : '<tr><th>Mat Code</th><th>Description</th><th style="text-align:center;">Qty</th></tr>';
+        table.appendChild(thead);
+
+        const tbody = document.createElement('tbody');
+
+        matchingItems.forEach(item => {
+          visibleCount++;
+          const tr = document.createElement('tr');
+          let codeText = highlightMatch(item.code, query);
+          let descText = highlightMatch(item.desc, query);
+
+          tr.innerHTML = isFastenersGroup
+            ? `
+                <td class="code">${codeText}</td>
+                <td class="size">${highlightMatch(item.size, query)}</td>
+                <td class="desc">${descText}</td>
+                <td class="qty">${item.qty}</td>
+              `
+            : `
+                <td class="code">${codeText}</td>
+                <td class="desc">${descText}</td>
+                <td class="qty">${item.qty}</td>
+              `;
+
+          tbody.appendChild(tr);
+        });
+
+        if (group.note && (!query || group.note.toLowerCase().includes(query))) {
+          visibleCount++;
+          const calloutRow = document.createElement('tr');
+          calloutRow.innerHTML = isFastenersGroup
+            ? `<td colspan="4"><div class="callout-note">${highlightMatch(group.note, query)}</div></td>`
+            : `<td colspan="3"><div class="callout-note">${highlightMatch(group.note, query)}</div></td>`;
+          tbody.appendChild(calloutRow);
+        }
+
+        table.appendChild(tbody);
+        block.appendChild(table);
+        categoryTables.appendChild(block);
+      }
+    });
+
+    if (visibleCount === 0) {
+      noResults.classList.add('show');
+    } else {
+      noResults.classList.remove('show');
+    }
+  }
+
+  function highlightMatch(text, query) {
+    if (!query || text === '—') return text;
+    const reg = new RegExp(`(${query})`, 'gi');
+    return text.replace(reg, '<mark>$1</mark>');
+  }
+
+  // Live Search Event Listeners
+  document.getElementById('globalSearch').addEventListener('input', (e) => renderTable(e.target.value));
+  document.getElementById('clearSearch').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('globalSearch').value = '';
+    renderTable('');
+  });
+
+  // Sidebar Toggle (Mobile)
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // PDF Export Engine
+  const exportPdfBtn = document.getElementById('exportPdfBtn');
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener('click', () => {
+      const element = document.getElementById('pdfContent');
+      const opt = {
+        margin:       [0.4, 0.4, 0.4, 0.4],
+        filename:     'TMT_Materials_List.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    });
+  }
+
+  // Initial Load
+  renderTable();
+</script>
+</body>
+</html>

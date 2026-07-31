@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mill Docs — Rebar Rolling Operational Kits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<style>
+  :root {
+    --primary: #FF385C;
+    --primary-hover: #E00B41;
+    --text-dark: #222222;
+    --text-muted: #717171;
+    --bg-main: #FFFFFF;
+    --bg-subtle: #F7F7F7;
+    --border-color: #EBEBEB;
+    --card-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    --radius: 12px;
+    --sidebar-width: 280px;
+    --transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Topbar Styling */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .sidebar-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: var(--transition);
+  }
+
+  .sidebar-toggle:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    background-color: var(--bg-subtle);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+  }
+
+  .brand small {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--bg-subtle);
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-left: 6px;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Search Bar */
+  .topbar-search {
+    position: relative;
+  }
+
+  .topbar-search input {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 10px 20px 10px 40px;
+    font-size: 0.875rem;
+    outline: none;
+    width: 260px;
+    transition: var(--transition);
+  }
+
+  .topbar-search input:focus {
+    background: #ffffff;
+    border-color: var(--text-dark);
+    width: 320px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .topbar-search::before {
+    content: "🔍";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  /* Export PDF Button */
+  .btn-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--text-dark);
+    color: #ffffff;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .btn-pdf:hover {
+    background: #000000;
+    transform: translateY(-1px);
+    box-shadow: var(--card-shadow);
+  }
+
+  .btn-pdf svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  /* Main Application Container Layout */
+  .app-container {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Sidebar Styles */
+  .sidebar {
+    width: var(--sidebar-width);
+    border-right: 1px solid var(--border-color);
+    padding: 32px 24px;
+    flex-shrink: 0;
+    background: #ffffff;
+    transition: var(--transition);
+  }
+
+  .nav-group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 24px 0 12px 12px;
+  }
+
+  .nav-group-title:first-child {
+    margin-top: 0;
+  }
+
+  .nav-menu {
+    list-style: none;
+  }
+
+  .nav-item {
+    margin-bottom: 4px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 0.938rem;
+    font-weight: 500;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .nav-link:hover {
+    background-color: var(--bg-subtle);
+  }
+
+  .nav-link.active {
+    background-color: #FFF0F3;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .nav-link .badge {
+    font-size: 0.75rem;
+    background: rgba(0,0,0,0.05);
+    padding: 2px 8px;
+    border-radius: 12px;
+    color: var(--text-muted);
+  }
+
+  .nav-link.active .badge {
+    background: #FFE0E6;
+    color: var(--primary);
+  }
+
+  /* Main Display Content Area */
+  .main-content {
+    flex: 1;
+    padding: 32px 40px 60px;
+    overflow-y: auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb .sep { color: #ccc; }
+  .breadcrumb .current { color: var(--text-dark); font-weight: 500; }
+
+  .kit-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+
+  .kit-description {
+    color: var(--text-muted);
+    font-size: 0.938rem;
+    margin-bottom: 24px;
+  }
+
+  .search-results-header {
+    background: var(--bg-subtle);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  /* Table Cards */
+  .table-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    background: #ffffff;
+  }
+
+  .kit-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.938rem;
+  }
+
+  .kit-table th {
+    background: var(--bg-subtle);
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 0.813rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .kit-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+  }
+
+  .kit-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .kit-table tr:hover td {
+    background-color: #FAF9F9;
+  }
+
+  /* Dashboard Overview Cards */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .dash-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .dash-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow);
+    border-color: #ddd;
+  }
+
+  .dash-card h3 {
+    font-size: 1.125rem;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+  }
+
+  .dash-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .dash-card .count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: #FFF0F3;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  /* Custom Badges */
+  .mat-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: var(--primary);
+    background: #FFF0F3;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .size-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875rem;
+    color: #484848;
+    background: var(--bg-subtle);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .drawing-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875rem;
+    color: #484848;
+  }
+
+  .is-set {
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 0.938rem;
+  }
+
+  .scroll-top-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 120;
+    border: none;
+    border-radius: 999px;
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    display: none;
+  }
+
+  .scroll-top-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 900px) {
+    .sidebar-toggle { display: flex; }
+    .topbar { padding: 0 20px; }
+    .sidebar {
+      position: fixed;
+      top: 80px;
+      left: -280px;
+      height: calc(100vh - 80px);
+      z-index: 90;
+      box-shadow: var(--card-shadow);
+    }
+    .sidebar.open { left: 0; }
+    .main-content { padding: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .topbar { height: auto; padding-block: 16px; flex-wrap: wrap; gap: 12px; }
+    .topbar-actions { width: 100%; justify-content: space-between; }
+    .topbar-search input { width: 100%; }
+    .topbar-search input:focus { width: 100%; }
+    .table-container { overflow-x: auto; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+    <div class="brand" onclick="switchPage('home')">
+      Mill Docs <small>REBAR ROLLING · INTERNAL</small>
+    </div>
+  </div>
+
+  <div class="topbar-actions">
+    <div class="topbar-search">
+      <input type="text" id="globalSearch" placeholder="Search codes, tools or descriptions…" aria-label="Search page content">
+    </div>
+    
+  </div>
+</header>
+
+<div class="app-container">
+
+  <!-- Sidebar Unified Menu -->
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-group-title">Overview</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a class="nav-link active" data-page="home" onclick="switchPage('home')">
+          <span>Home Dashboard</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-group-title">Fitter Tool Boxes</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a class="nav-link" data-page="roughing" onclick="switchPage('roughing')">
+          <span>Roughing Mill Box</span>
+          <span class="badge">12</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="intermediate" onclick="switchPage('intermediate')">
+          <span>Intermediate Mill Box</span>
+          <span class="badge">15</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="finishing" onclick="switchPage('finishing')">
+          <span>Finishing Mill Box</span>
+          <span class="badge">24</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-group-title">TMT & Hotcut</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a class="nav-link" data-page="pinch-roll" onclick="switchPage('pinch-roll')">
+          <span>Pinch Roll Funnel Parts</span>
+          <span class="badge">10</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="tmt" onclick="switchPage('tmt')">
+          <span>TMT Materials</span>
+          <span class="badge">8</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Viewer -->
+  <main class="main-content" id="pdfContent">
+    <div class="breadcrumb">
+      <span>Mill Docs</span><span class="sep">/</span>
+      <span class="current" id="breadcrumbCurrent">Home Dashboard</span>
+    </div>
+
+    <div id="searchFeedback" class="search-results-header" style="display:none;">
+      Filter active — showing matching records. <a href="#" id="clearSearch" style="font-weight:600; margin-left:8px; color:var(--primary); text-decoration:none;">× Clear filter</a>
+    </div>
+
+    <div id="pageHeader">
+      <h1 class="kit-heading" id="kitTitle">HRM1 Production</h1>
+      <p class="kit-description" id="kitDesc">Reference documents for technical specifications and material codes.</p>
+    </div>
+
+    <!-- Table Container Container -->
+    <div class="table-container" id="tableWrapper" style="display: none;">
+      <table class="kit-table">
+        <thead id="kitTableHead"></thead>
+        <tbody id="kitTableBody"></tbody>
+      </table>
+      <div class="no-results" id="noResults">No matching parts or tools found.</div>
+    </div>
+
+    <!-- Home Dashboard Grid View -->
+    <div class="dashboard-grid" id="dashboardGrid">
+      <div class="dash-card" onclick="switchPage('roughing')">
+        <h3>Roughing Mill Box</h3>
+        <p>Standard fitter tool box components for roughing stand maintenance.</p>
+        <span class="count">12 Items</span>
+      </div>
+      <div class="dash-card" onclick="switchPage('intermediate')">
+        <h3>Intermediate Mill Box</h3>
+        <p>Spanners, hammers, and measuring tools for intermediate mill fitters.</p>
+        <span class="count">15 Items</span>
+      </div>
+      <div class="dash-card" onclick="switchPage('finishing')">
+        <h3>Finishing Mill Box</h3>
+        <p>Complete fitter tool set for finishing stands, spanners, and cutting gear.</p>
+        <span class="count">24 Items</span>
+      </div>
+      <div class="dash-card" onclick="switchPage('pinch-roll')">
+        <h3>Pinch Roll Funnel Parts</h3>
+        <p>Material codes for funnel holders.</p>
+        <span class="count">10 Technical Items</span>
+      </div>
+      <div class="dash-card" onclick="switchPage('tmt')">
+        <h3>TMT Materials</h3>
+        <p>TMT area materials.</p>
+        <span class="count">8 Specialized Items</span>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Go to top">↑</button>
+
+<script>
+  // Unified Consolidated Dataset
+  const MILL_DATA = {
+    roughing: {
+      title: "Roughing Mill Fitter Tool Box",
+      desc: "Standard fitter tool box contents for roughing mill area.",
+      type: "standard",
+      data: [
+       
+        
+        { code: "8000000063", size: "Ø25mm x 8mtr; 500mm eye", desc: "Wire Rope Sling", qty: "2" }
+      ]
+    },
+    intermediate: {
+      title: "Intermediate Mill Fitter Box",
+      desc: "Standard fitter tool box contents for intermediate rolling stands.",
+      type: "standard",
+      data: [
+        { code: "8000000124", size: "6lb", desc: "Hammer", qty: "2" },
+        { code: "8000000389", size: "50mm", desc: "Hammering Spanner - Ring", qty: "1" },
+        { code: "8000000388", size: "46mm", desc: "Hammering Spanner - Ring", qty: "2" },
+        { code: "8000000387", size: "36mm", desc: "Combination Spanner", qty: "2" },
+        { code: "8000000098", size: "30mm", desc: "Combination Spanner", qty: "2" },
+        { code: "8000000096", size: "24mm", desc: "Combination Spanner", qty: "4" },
+        { code: "8000000464", size: "19mm", desc: "Combination Spanner", qty: "4" },
+        { code: "8000001544", size: "Allen Set", desc: "Key Set (2.5mm - 14mm)", qty: "1" },
+        { code: "8000000209", size: "300mm", desc: "Vernier Caliper", qty: "1" },
+        { code: "8000000115", size: "3m", desc: "Measuring Tape", qty: "1" },
+        { code: "8000000091", size: "Standard", desc: "Hacksaw Frame", qty: "1" },
+        { code: "8000001025", size: "8\"", desc: "Combination Plier", qty: "1" },
+        { code: "8000000413", size: "10\"", desc: "Adjustable Spanner", qty: "1" },
+        { code: "5000000045", size: "—", desc: "Flashlight", qty: "1" },
+        { code: "7000000010", size: "—", desc: "Binding Wire", qty: "1 Roll" }
+      ]
+    },
+    finishing: {
+      title: "Finishing Mill Fitter Tool Box",
+      desc: "Standard fitter tool box components for high-speed finishing stands.",
+      type: "standard",
+      data: [
+        { code: "8000000124", size: "6lb", desc: "Hammer", qty: "2" },
+        { code: "8000000389", size: "55mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "1" },
+        { code: "8000000388", size: "50mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "1" },
+        { code: "8000000387", size: "46mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "2" },
+        { code: "8000000098", size: "46mm", desc: "Combination Spanner - Ring - Open", qty: "2" },
+        { code: "8000000096", size: "36mm", desc: "Combination Spanner - Ring - Open", qty: "2" },
+        { code: "8000000464", size: "30mm", desc: "Combination Spanner - Ring - Open", qty: "4" },
+        { code: "8000000109", size: "24mm", desc: "Combination Spanner - Ring - Open", qty: "4" },
+        { code: "8000000111", size: "19mm", desc: "Combination Spanner - Ring - Open", qty: "2" },
+        { code: "8000001544", size: "6mm", desc: "Allen Keys", qty: "1" },
+        { code: "", size: "8mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "10mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "12mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "14mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "17mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "8000000209", size: "300mm", desc: "Vernier Caliper", qty: "1" },
+        { code: "8000000115", size: "3m", desc: "Measuring Tape", qty: "1" },
+        { code: "8000000091", size: "—", desc: "Hacksaw Frame (Small)", qty: "1" },
+        { code: "8000000042", size: "6\"", desc: "Hacksaw Blade", qty: "1" },
+        { code: "8000001025", size: "—", desc: "Plier", qty: "1" },
+        { code: "8000000413", size: "8\"", desc: "Adjustable Spanner", qty: "1" },
+        { code: "5000000045", size: "—", desc: "Flashlight", qty: "1" },
+        { code: "5000000115", size: "3\"", desc: "Gas Cutting Set Nozzle", qty: "2" },
+        { code: "7000000010", size: "—", desc: "Binding Wire", qty: "—" }
+      ]
+    },
+    "pinch-roll": {
+      title: "Pinch Roll Funnel Parts",
+      desc: "Technical drawings and SAP material codes for pinch roll funnels.",
+      type: "detailed",
+      data: [
+        { code: "4000027600", desc: "Pinch Roll Left Entry Funnel Holder", extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027601", desc: "Pinch Roll Left Exit Funnel Holder",  extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027602", desc: "Pinch Roll Right Entry Funnel Holder",  extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027603", desc: "Pinch Roll Right Exit Funnel Holder",  extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027604", desc: "Pinch Roll Entry Funnel 1", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027605", desc: "Pinch Roll Entry Funnel 2",  extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027606", desc: "Pinch Roll Entry Funnel 3",extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027607", desc: "Pinch Roll Exit Funnel 1",  extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027608", desc: "Pinch Roll Exit Funnel 2", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027609", desc: "Pinch Roll Funnel C Clamp",  extra: "Material: ZG35 Steel" }
+      ]
+    },
+    tmt: {
+      title: "TMT Line Material Codes",
+      desc: "Material codes and drawing details for TMT quenching line.",
+      type: "detailed",
+
+
+data: [
+    {
+      category: "Fasteners & Hardware",
+      note: "All are High Tensile (HT) Bolts",
+      items: [
+        { code: "—", size: "M16x65", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M12x35", desc: "Full Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "20mm Thread Length", qty: "—" },
+        { code: "—", size: "M16x65", desc: "20mm Thread Length", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 8 - 12 MM",
+      items: [
+        { code: "4000026668", size: "8-12MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026622", size: "8-12MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026623", size: "8-12MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026624", size: "8-12MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026625", size: "8-12MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026626", size: "8-12MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026638", size: "8-12MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026639", size: "8-12MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026640", size: "8-12MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026672", size: "8-12MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 16 MM",
+      items: [
+             { code: "4000026669", size: "16MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026642", size: "16MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026643", size: "16MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026644", size: "16MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026645", size: "16MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026646", size: "16MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026647", size: "16MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026648", size: "16MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026649", size: "16MM", desc: "TMT Air Nozzle", qty: "—" },
+   
+        { code: "4000026673", size: "16MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 20 - 32 MM",
+      items: [
+         { code: "4000026670", size: "20-32MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026650", size: "20-32MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026652", size: "20-32MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026653", size: "20-32MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026654", size: "20-32MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026655", size: "20-32MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026656", size: "20-32MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026657", size: "20-32MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026658", size: "20-32MM", desc: "TMT Air Nozzle", qty: "—" },
+       
+        { code: "4000026674", size: "20-32MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 36 - 40 MM",
+      items: [
+        { code: "4000026667", size: "36-40MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026659", size: "36-40MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026660", size: "36-40MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026661", size: "36-40MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026662", size: "36-40MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026663", size: "36-40MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026664", size: "36-40MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026665", size: "36-40MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026666", size: "36-40MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026675", size: "36-40MM", desc: "TMT Exit Funnel", qty: "—" }
+     
+      ]
+    }
+  ]
+    }
+  };
+
+  let currentPage = 'home';
+
+  function switchPage(pageKey) {
+    currentPage = pageKey;
+
+    // Update active state in menu
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-page') === pageKey);
+    });
+
+    const breadcrumbCurrent = document.getElementById('breadcrumbCurrent');
+    const kitTitle = document.getElementById('kitTitle');
+    const kitDesc = document.getElementById('kitDesc');
+    const tableWrapper = document.getElementById('tableWrapper');
+    const dashboardGrid = document.getElementById('dashboardGrid');
+
+    // Clear search on switch
+    document.getElementById('globalSearch').value = '';
+    document.getElementById('searchFeedback').style.display = 'none';
+
+    if (pageKey === 'home') {
+      breadcrumbCurrent.textContent = "Home Dashboard";
+      kitTitle.textContent = "Operational Reference Hub";
+      kitDesc.textContent = "Select a tool box or material kit from the menu to inspect equipment details and material codes.";
+      tableWrapper.style.display = 'none';
+      dashboardGrid.style.display = 'grid';
+    } else {
+      const pageInfo = MILL_DATA[pageKey];
+      breadcrumbCurrent.textContent = pageInfo.title;
+      kitTitle.textContent = pageInfo.title;
+      kitDesc.textContent = pageInfo.desc;
+      
+      dashboardGrid.style.display = 'none';
+      tableWrapper.style.display = 'block';
+      
+      renderTableHead(pageInfo.type, pageInfo.data);
+      renderTableBody(pageInfo.data, pageInfo.type);
+    }
+
+    // Close mobile menu on navigate
+    document.getElementById('sidebar').classList.remove('open');
+  }
+
+  function isGroupedData(data) {
+    return Array.isArray(data) && data.some(item => item && Array.isArray(item.items));
+  }
+
+  function matchesQuery(item, query) {
+    if (!query) return true;
+    if (item && Array.isArray(item.items)) {
+      return item.category.toLowerCase().includes(query) ||
+        item.note.toLowerCase().includes(query) ||
+        item.items.some(entry => matchesQuery(entry, query));
+    }
+
+    return Object.values(item).some(val => String(val).toLowerCase().includes(query));
+  }
+
+  function renderTableHead(type, data) {
+    const thead = document.getElementById('kitTableHead');
+    const grouped = isGroupedData(data);
+
+    if (type === 'standard' || grouped) {
+      thead.innerHTML = `
+        <tr>
+          <th>Mat Code</th>
+          <th>Size</th>
+          <th>Description</th>
+          <th>Qty</th>
+        </tr>`;
+    } else {
+      thead.innerHTML = `
+        <tr>
+          <th>Mat Code</th>
+          <th>Description</th>
+        </tr>`;
+    }
+  }
+
+  function renderTableBody(data, type) {
+    const tbody = document.getElementById('kitTableBody');
+    const noResults = document.getElementById('noResults');
+    tbody.innerHTML = '';
+
+    if (!Array.isArray(data) || data.length === 0) {
+      noResults.style.display = 'block';
+      return;
+    }
+
+    noResults.style.display = 'none';
+
+    if (isGroupedData(data)) {
+      data.forEach(group => {
+        if (!group.items || !Array.isArray(group.items)) return;
+
+        const categoryRow = document.createElement('tr');
+        categoryRow.className = 'category-row';
+        categoryRow.innerHTML = `<td colspan="4"><strong>${group.category}</strong></td>`;
+        tbody.appendChild(categoryRow);
+
+        group.items.forEach(item => {
+          const row = document.createElement('tr');
+          if (item.isSet) row.classList.add('is-set');
+          row.innerHTML = `
+            <td>${item.code ? `<span class="mat-code">${item.code}</span>` : '<span style="color:#ccc;">—</span>'}</td>
+            <td>${item.size && item.size !== '—' ? `<span class="size-badge">${item.size}</span>` : '—'}</td>
+            <td><strong>${item.desc}</strong></td>
+            <td>${item.qty || '—'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        if (group.note) {
+          const noteRow = document.createElement('tr');
+          noteRow.innerHTML = `<td colspan="4"><div class="search-results-header" style="margin:0; border:none; padding:12px 0; background:transparent;">${group.note}</div></td>`;
+          tbody.appendChild(noteRow);
+        }
+      });
+      return;
+    }
+
+    data.forEach(item => {
+      const row = document.createElement('tr');
+      if (item.isSet) row.classList.add('is-set');
+
+      if (type === 'standard') {
+        row.innerHTML = `
+          <td>${item.code ? `<span class="mat-code">${item.code}</span>` : '<span style="color:#ccc;">—</span>'}</td>
+          <td>${item.size && item.size !== '—' ? `<span class="size-badge">${item.size}</span>` : '—'}</td>
+          <td><strong>${item.desc}</strong></td>
+          <td>${item.qty || '—'}</td>
+        `;
+      } else {
+        row.innerHTML = `
+          <td><span class="mat-code">${item.code}</span></td>
+          <td><strong>${item.desc}</strong></td>
+        `;
+      }
+      tbody.appendChild(row);
+    });
+  }
+
+  // Interactive Live Search
+  const searchInput = document.getElementById('globalSearch');
+  const searchFeedback = document.getElementById('searchFeedback');
+  const clearSearchBtn = document.getElementById('clearSearch');
+
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    if (currentPage === 'home') return;
+
+    const pageInfo = MILL_DATA[currentPage];
+    if (query) {
+      searchFeedback.style.display = 'block';
+      const filtered = pageInfo.data.filter(item => matchesQuery(item, query));
+      renderTableBody(filtered, pageInfo.type);
+    } else {
+      searchFeedback.style.display = 'none';
+      renderTableBody(pageInfo.data, pageInfo.type);
+    }
+  });
+
+  clearSearchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchInput.value = '';
+    searchFeedback.style.display = 'none';
+    if (currentPage !== 'home') {
+      renderTableBody(MILL_DATA[currentPage].data, MILL_DATA[currentPage].type);
+    }
+  });
+
+  // Mobile sidebar toggle logic
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // PDF Export functionality
+  document.getElementById('exportPdfBtn').addEventListener('click', () => {
+    const element = document.getElementById('pdfContent');
+    const fileName = currentPage === 'home' ? 'Mill_Docs_Overview.pdf' : `${MILL_DATA[currentPage].title.replace(/\s+/g, '_')}.pdf`;
+    
+    const opt = {
+      margin:       [0.5, 0.5, 0.5, 0.5],
+      filename:     fileName,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  });
+</script>
+</body>
+</html>

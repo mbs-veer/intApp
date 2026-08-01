@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mill Docs — Rebar Rolling Operational Kits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<style>
+  :root {
+    --primary: #FF385C;
+    --primary-hover: #E00B41;
+    --text-dark: #222222;
+    --text-muted: #717171;
+    --bg-main: #FFFFFF;
+    --bg-subtle: #F7F7F7;
+    --border-color: #EBEBEB;
+    --card-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    --radius: 12px;
+    --sidebar-width: 280px;
+    --transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text-dark);
+    background-color: var(--bg-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Topbar Styling */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #ffffff;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .sidebar-toggle {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: var(--transition);
+  }
+
+  .sidebar-toggle:hover {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+    background-color: var(--bg-subtle);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+  }
+
+  .brand small {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--bg-subtle);
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-left: 6px;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Search Bar */
+  .topbar-search {
+    position: relative;
+  }
+
+  .topbar-search input {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    padding: 10px 20px 10px 40px;
+    font-size: 0.875rem;
+    outline: none;
+    width: 260px;
+    transition: var(--transition);
+  }
+
+  .topbar-search input:focus {
+    background: #ffffff;
+    border-color: var(--text-dark);
+    width: 320px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .topbar-search::before {
+    content: "🔍";
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    opacity: 0.5;
+  }
+
+  /* Export PDF Button */
+  .btn-pdf {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--text-dark);
+    color: #ffffff;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .btn-pdf:hover {
+    background: #000000;
+    transform: translateY(-1px);
+    box-shadow: var(--card-shadow);
+  }
+
+  .btn-pdf svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+  }
+
+  /* Main Application Container Layout */
+  .app-container {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+    min-height: calc(100vh - 80px);
+  }
+
+  /* Sidebar Styles */
+  .sidebar {
+    width: var(--sidebar-width);
+    border-right: 1px solid var(--border-color);
+    padding: 32px 24px;
+    flex-shrink: 0;
+    background: #ffffff;
+    transition: var(--transition);
+  }
+
+  .nav-group-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 24px 0 12px 12px;
+  }
+
+  .nav-group-title:first-child {
+    margin-top: 0;
+  }
+
+  .nav-group-title.collapsible {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: var(--transition);
+  }
+
+  .nav-group-title.collapsible:hover {
+    color: var(--text-dark);
+  }
+
+  .nav-group-title .chevron {
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+    color: var(--text-muted);
+  }
+
+  .nav-group-title.collapsible.open .chevron {
+    transform: rotate(90deg);
+  }
+
+  .nav-menu {
+    list-style: none;
+    overflow: hidden;
+    max-height: 2000px;
+    transition: max-height 0.25s ease, opacity 0.2s ease;
+    opacity: 1;
+  }
+
+  .nav-menu.collapsed {
+    max-height: 0;
+    opacity: 0;
+  }
+
+  .nav-item {
+    margin-bottom: 4px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 0.938rem;
+    font-weight: 500;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .nav-link:hover {
+    background-color: var(--bg-subtle);
+  }
+
+  .nav-link.active {
+    background-color: #FFF0F3;
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .nav-link .badge {
+    font-size: 0.75rem;
+    background: rgba(0,0,0,0.05);
+    padding: 2px 8px;
+    border-radius: 12px;
+    color: var(--text-muted);
+  }
+
+  .nav-link.active .badge {
+    background: #FFE0E6;
+    color: var(--primary);
+  }
+
+  /* Main Display Content Area */
+  .main-content {
+    flex: 1;
+    padding: 32px 40px 60px;
+    overflow-y: auto;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .breadcrumb .sep { color: #ccc; }
+  .breadcrumb .current { color: var(--text-dark); font-weight: 500; }
+
+  .breadcrumb .crumb-link {
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .breadcrumb .crumb-link:hover {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  .kit-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 6px;
+  }
+
+  .kit-description {
+    color: var(--text-muted);
+    font-size: 0.938rem;
+    margin-bottom: 24px;
+  }
+
+  .search-results-header {
+    background: var(--bg-subtle);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  /* Table Cards */
+  .table-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    background: #ffffff;
+  }
+
+  .kit-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.938rem;
+  }
+
+  .kit-table th {
+    background: var(--bg-subtle);
+    padding: 14px 20px;
+    font-weight: 600;
+    font-size: 0.813rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .kit-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+  }
+
+  .kit-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .kit-table tr:hover td {
+    background-color: #FAF9F9;
+  }
+
+  /* Dashboard Overview Cards */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 24px;
+  }
+
+  .dash-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 24px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .dash-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow);
+    border-color: #ddd;
+  }
+
+  .dash-card h3 {
+    font-size: 1.125rem;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+  }
+
+  .dash-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .dash-card .count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: #FFF0F3;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+  }
+
+  /* Custom Badges */
+  .mat-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    color: var(--primary);
+    background: #FFF0F3;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+
+  .size-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875rem;
+    color: #484848;
+    background: var(--bg-subtle);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .drawing-code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.875rem;
+    color: #484848;
+  }
+
+  .is-set {
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  .no-results {
+    display: none;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 0.938rem;
+  }
+
+  /* Revamp Phase II — spec pages */
+  .revamp-crumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+  }
+
+  .revamp-crumb a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .revamp-crumb a:hover { text-decoration: underline; }
+
+  .revamp-crumb .sep { color: #ccc; }
+
+  .revamp-block { margin-bottom: 28px; }
+
+  .revamp-block:last-child { margin-bottom: 0; }
+
+  .revamp-subhead {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+  }
+
+  .revamp-subhead small {
+    display: block;
+    font-size: 0.813rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .spec-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 4px 0 16px;
+    line-height: 1.6;
+  }
+
+  .spec-meta strong { color: var(--text-dark); }
+
+  .spec-highlight {
+    color: var(--primary);
+    font-weight: 600;
+  }
+
+  .spec-table-container {
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    background: #ffffff;
+    margin-bottom: 16px;
+  }
+
+  table.spec-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.875rem;
+  }
+
+  table.spec-table th {
+    background: var(--bg-subtle);
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+  }
+
+  table.spec-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+  }
+
+  table.spec-table tr:last-child td { border-bottom: none; }
+
+  table.spec-table tr:hover td { background-color: #FAF9F9; }
+
+  table.spec-table.plain td:first-child {
+    color: var(--text-muted);
+    font-weight: 500;
+    width: 32%;
+  }
+
+  .spec-note {
+    border-left: 3px solid var(--primary);
+    background: #FFF0F3;
+    padding: 10px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.875rem;
+    color: var(--text-dark);
+    margin-bottom: 16px;
+  }
+
+  .spec-doc-meta {
+    font-size: 0.813rem;
+    color: var(--text-muted);
+    margin-top: -6px;
+  }
+
+  .scroll-top-btn {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 120;
+    border: none;
+    border-radius: 999px;
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    display: none;
+  }
+
+  .scroll-top-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 900px) {
+    .sidebar-toggle { display: flex; }
+    .topbar { padding: 0 20px; }
+    .sidebar {
+      position: fixed;
+      top: 80px;
+      left: -280px;
+      height: calc(100vh - 80px);
+      z-index: 90;
+      box-shadow: var(--card-shadow);
+    }
+    .sidebar.open { left: 0; }
+    .main-content { padding: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .topbar { height: auto; padding-block: 16px; flex-wrap: wrap; gap: 12px; }
+    .topbar-actions { width: 100%; justify-content: space-between; }
+    .topbar-search input { width: 100%; }
+    .topbar-search input:focus { width: 100%; }
+    .table-container { overflow-x: auto; }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+    <div class="brand" onclick="switchPage('home')">
+      Mill Docs <small>REBAR ROLLING · INTERNAL</small>
+    </div>
+  </div>
+
+  <div class="topbar-actions">
+    <div class="topbar-search">
+      <input type="text" id="globalSearch" placeholder="Search codes, tools or descriptions…" aria-label="Search page content">
+    </div>
+    
+  </div>
+</header>
+
+<div class="app-container">
+
+  <!-- Sidebar Unified Menu -->
+  <aside class="sidebar" id="sidebar">
+    <div class="nav-group-title">Overview</div>
+    <ul class="nav-menu">
+      <li class="nav-item">
+        <a class="nav-link active" data-page="home" onclick="switchPage('home')">
+          <span>Home Dashboard</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-group-title collapsible" id="navHeader-techspec" onclick="toggleNavGroup('techspec')">
+      <span>Tech Spec</span><span class="chevron">▸</span>
+    </div>
+    <ul class="nav-menu collapsed" id="navGroup-techspec">
+      <li class="nav-item">
+        <a class="nav-link" data-page="tech-spec-overview" onclick="switchPage('tech-spec-overview')">
+          <span>Overview</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-billet-charging-grid" onclick="switchPage('revamp-billet-charging-grid')">
+          <span>Billet Charging Grid</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-billet-charging-roller-table" onclick="switchPage('revamp-billet-charging-roller-table')">
+          <span>Billet Charging Roller Table</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-billet-delivery-grid" onclick="switchPage('revamp-billet-delivery-grid')">
+          <span>Billet Delivery Roller Table into Grid</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-billet-pusher" onclick="switchPage('revamp-billet-pusher')">
+          <span>Billet Pusher</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-billet-discharging-roller-table" onclick="switchPage('revamp-billet-discharging-roller-table')">
+          <span>Billet Discharging Roller Table</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-working-roller-table" onclick="switchPage('revamp-working-roller-table')">
+          <span>Working Roller Table (Mill Line Front)</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-stand-roll-data" onclick="switchPage('revamp-stand-roll-data')">
+          <span>Stand & Roll Data</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-stand-9" onclick="switchPage('revamp-stand-9')">
+          <span>Stand 9</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-stand-10" onclick="switchPage('revamp-stand-10')">
+          <span>Stand 10</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-stand-11" onclick="switchPage('revamp-stand-11')">
+          <span>Stand 11</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-stand-12" onclick="switchPage('revamp-stand-12')">
+          <span>Stand 12</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="revamp-cold-shear" onclick="switchPage('revamp-cold-shear')">
+          <span>630t Cold Shear</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-group-title collapsible" id="navHeader-matcodes" onclick="toggleNavGroup('matcodes')">
+      <span>Mat Codes</span><span class="chevron">▸</span>
+    </div>
+    <ul class="nav-menu collapsed" id="navGroup-matcodes">
+      <li class="nav-item">
+        <a class="nav-link" data-page="matcodes-overview" onclick="switchPage('matcodes-overview')">
+          <span>Overview</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="roughing" onclick="switchPage('roughing')">
+          <span>Roughing Mill Box</span>
+          <span class="badge">12</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="intermediate" onclick="switchPage('intermediate')">
+          <span>Intermediate Mill Box</span>
+          <span class="badge">15</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="finishing" onclick="switchPage('finishing')">
+          <span>Finishing Mill Box</span>
+          <span class="badge">24</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="pinch-roll" onclick="switchPage('pinch-roll')">
+          <span>Pinch Roll Funnel Parts</span>
+          <span class="badge">10</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-page="tmt" onclick="switchPage('tmt')">
+          <span>TMT Materials</span>
+          <span class="badge">8</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Viewer -->
+  <main class="main-content" id="pdfContent">
+    <div class="breadcrumb" id="breadcrumbTrail">
+      <span class="crumb-link" onclick="switchPage('home')">Mill Docs</span><span class="sep">/</span>
+      <span class="current" id="breadcrumbCurrent">Home Dashboard</span>
+    </div>
+
+    <div id="searchFeedback" class="search-results-header" style="display:none;">
+      Filter active — showing matching records. <a href="#" id="clearSearch" style="font-weight:600; margin-left:8px; color:var(--primary); text-decoration:none;">× Clear filter</a>
+    </div>
+
+    <div id="pageHeader">
+      <h1 class="kit-heading" id="kitTitle">HRM1 Production</h1>
+      <p class="kit-description" id="kitDesc">Reference documents for technical specifications and material codes.</p>
+      <p class="spec-meta" id="homeIntro" style="display:block; font-size:0.938rem; color: var(--text-dark); max-width: 780px;">
+        The Rebar Mill Revamping Project is a focused upgrade of the existing bar mill aimed at
+        significantly improving productivity and operating capability. The revamp is being carried
+        out with technology and major equipment supplied by Wuxi Bolong Machinery Co., Ltd., covering
+        key process areas from billet charging to finished bar handling.
+        <br><br>
+        Through this project, the mill's annual capacity will be increased from
+        <span class="spec-highlight">300,000 TPA to 600,000 TPA</span>, with an hourly production
+        rate of <span class="spec-highlight">90–100 t/h</span>, while expanding billet length from
+        6&nbsp;m to 12&nbsp;m and maintaining a product range of Ø10–40&nbsp;mm rebars.
+      </p>
+    </div>
+
+    <!-- Table Container Container -->
+    <div class="table-container" id="tableWrapper" style="display: none;">
+      <table class="kit-table">
+        <thead id="kitTableHead"></thead>
+        <tbody id="kitTableBody"></tbody>
+      </table>
+      <div class="no-results" id="noResults">No matching parts or tools found.</div>
+    </div>
+
+    <!-- Rebar Revamp Phase II Content -->
+    <div id="revampContent" style="display: none;"></div>
+
+    <!-- Home Dashboard Grid View -->
+    <div class="dashboard-grid" id="dashboardGrid">
+      <div class="dash-card" onclick="switchPage('tech-spec-overview')">
+        <h3>Tech Spec</h3>
+        <p>Rebar Revamp Phase II — billet handling, roller tables, and Stand 9–12 upgrade specifications.</p>
+        <span class="count">12 Reference Pages</span>
+      </div>
+      <div class="dash-card" onclick="switchPage('matcodes-overview')">
+        <h3>Mat Codes</h3>
+        <p>Fitter tool boxes, pinch roll funnel parts, and TMT material codes.</p>
+        <span class="count">5 Reference Pages</span>
+      </div>
+    </div>
+  </main>
+
+</div>
+
+<button class="scroll-top-btn" id="scrollTopBtn" aria-label="Go to top">↑</button>
+
+<script>
+  // Unified Consolidated Dataset
+  const MILL_DATA = {
+    roughing: {
+      title: "Roughing Mill Fitter Tool Box",
+      desc: "Standard fitter tool box contents for roughing mill area.",
+      section: "Mat Codes",
+      type: "standard",
+      data: [
+       
+        
+        { code: "8000000063", size: "Ø25mm x 8mtr; 500mm eye", desc: "Wire Rope Sling", qty: "2" }
+      ]
+    },
+    intermediate: {
+      title: "Intermediate Mill Fitter Box",
+      desc: "Standard fitter tool box contents for intermediate rolling stands.",
+      section: "Mat Codes",
+      type: "standard",
+      data: [
+        { code: "8000000124", size: "6lb", desc: "Hammer", qty: "2" },
+        { code: "8000000389", size: "50mm", desc: "Hammering Spanner - Ring", qty: "1" },
+        { code: "8000000388", size: "46mm", desc: "Hammering Spanner - Ring", qty: "2" },
+        { code: "8000000387", size: "36mm", desc: "Combination Spanner", qty: "2" },
+        { code: "8000000098", size: "30mm", desc: "Combination Spanner", qty: "2" },
+        { code: "8000000096", size: "24mm", desc: "Combination Spanner", qty: "4" },
+        { code: "8000000464", size: "19mm", desc: "Combination Spanner", qty: "4" },
+        { code: "8000001544", size: "Allen Set", desc: "Key Set (2.5mm - 14mm)", qty: "1" },
+        { code: "8000000209", size: "300mm", desc: "Vernier Caliper", qty: "1" },
+        { code: "8000000115", size: "3m", desc: "Measuring Tape", qty: "1" },
+        { code: "8000000091", size: "Standard", desc: "Hacksaw Frame", qty: "1" },
+        { code: "8000001025", size: "8\"", desc: "Combination Plier", qty: "1" },
+        { code: "8000000413", size: "10\"", desc: "Adjustable Spanner", qty: "1" },
+        { code: "5000000045", size: "—", desc: "Flashlight", qty: "1" },
+        { code: "7000000010", size: "—", desc: "Binding Wire", qty: "1 Roll" }
+      ]
+    },
+    finishing: {
+      title: "Finishing Mill Fitter Tool Box",
+      desc: "Standard fitter tool box components for high-speed finishing stands.",
+      section: "Mat Codes",
+      type: "standard",
+      data: [
+        { code: "8000000124", size: "6lb", desc: "Hammer", qty: "2" },
+        { code: "8000000389", size: "55mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "1" },
+        { code: "8000000388", size: "50mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "1" },
+        { code: "8000000387", size: "46mm", desc: "Hammering Spanner - Ring - Bend Type", qty: "2" },
+        { code: "8000000098", size: "46mm", desc: "Combination Spanner - Ring - Open", qty: "2" },
+        { code: "8000000096", size: "36mm", desc: "Combination Spanner - Ring - Open", qty: "2" },
+        { code: "8000000464", size: "30mm", desc: "Combination Spanner - Ring - Open", qty: "4" },
+        { code: "8000000109", size: "24mm", desc: "Combination Spanner - Ring - Open", qty: "4" },
+        { code: "8000000111", size: "19mm", desc: "Combination Spanner - Ring - Open", qty: "2" },
+        { code: "8000001544", size: "6mm", desc: "Allen Keys", qty: "1" },
+        { code: "", size: "8mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "10mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "12mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "14mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "", size: "17mm", desc: "Allen Keys (part of set 8000001544)", qty: "—", isSet: true },
+        { code: "8000000209", size: "300mm", desc: "Vernier Caliper", qty: "1" },
+        { code: "8000000115", size: "3m", desc: "Measuring Tape", qty: "1" },
+        { code: "8000000091", size: "—", desc: "Hacksaw Frame (Small)", qty: "1" },
+        { code: "8000000042", size: "6\"", desc: "Hacksaw Blade", qty: "1" },
+        { code: "8000001025", size: "—", desc: "Plier", qty: "1" },
+        { code: "8000000413", size: "8\"", desc: "Adjustable Spanner", qty: "1" },
+        { code: "5000000045", size: "—", desc: "Flashlight", qty: "1" },
+        { code: "5000000115", size: "3\"", desc: "Gas Cutting Set Nozzle", qty: "2" },
+        { code: "7000000010", size: "—", desc: "Binding Wire", qty: "—" }
+      ]
+    },
+    "pinch-roll": {
+      title: "Pinch Roll Funnel Parts",
+      desc: "Technical drawings and SAP material codes for pinch roll funnels.",
+      section: "Mat Codes",
+      type: "detailed",
+      data: [
+        { code: "4000027600", desc: "Pinch Roll Left Entry Funnel Holder", extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027601", desc: "Pinch Roll Left Exit Funnel Holder",  extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027602", desc: "Pinch Roll Right Entry Funnel Holder",  extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027603", desc: "Pinch Roll Right Exit Funnel Holder",  extra: "Material: EN19 hardened to 35HRC" },
+        { code: "4000027604", desc: "Pinch Roll Entry Funnel 1", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027605", desc: "Pinch Roll Entry Funnel 2",  extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027606", desc: "Pinch Roll Entry Funnel 3",extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027607", desc: "Pinch Roll Exit Funnel 1",  extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027608", desc: "Pinch Roll Exit Funnel 2", extra: "Material: Funnel- EN19 steel with hardened upto 42 HRC; Legs & Base- Mild Steel" },
+        { code: "4000027609", desc: "Pinch Roll Funnel C Clamp",  extra: "Material: ZG35 Steel" }
+      ]
+    },
+    tmt: {
+      title: "TMT Line Material Codes",
+      desc: "Material codes and drawing details for TMT quenching line.",
+      section: "Mat Codes",
+      type: "detailed",
+
+
+data: [
+    {
+      category: "Fasteners & Hardware",
+      note: "All are High Tensile (HT) Bolts",
+      items: [
+        { code: "—", size: "M16x65", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "Half Thread Bolt", qty: "—" },
+        { code: "—", size: "M12x35", desc: "Full Thread Bolt", qty: "—" },
+        { code: "—", size: "M16x85", desc: "20mm Thread Length", qty: "—" },
+        { code: "—", size: "M16x65", desc: "20mm Thread Length", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 8 - 12 MM",
+      items: [
+        { code: "4000026668", size: "8-12MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026622", size: "8-12MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026623", size: "8-12MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026624", size: "8-12MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026625", size: "8-12MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026626", size: "8-12MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026638", size: "8-12MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026639", size: "8-12MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026640", size: "8-12MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026672", size: "8-12MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 16 MM",
+      items: [
+             { code: "4000026669", size: "16MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026642", size: "16MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026643", size: "16MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026644", size: "16MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026645", size: "16MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026646", size: "16MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026647", size: "16MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026648", size: "16MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026649", size: "16MM", desc: "TMT Air Nozzle", qty: "—" },
+   
+        { code: "4000026673", size: "16MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 20 - 32 MM",
+      items: [
+         { code: "4000026670", size: "20-32MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026650", size: "20-32MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026652", size: "20-32MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026653", size: "20-32MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026654", size: "20-32MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026655", size: "20-32MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026656", size: "20-32MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026657", size: "20-32MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026658", size: "20-32MM", desc: "TMT Air Nozzle", qty: "—" },
+       
+        { code: "4000026674", size: "20-32MM", desc: "TMT Exit Funnel", qty: "—" }
+      ]
+    },
+    {
+      category: "Size: 36 - 40 MM",
+      items: [
+        { code: "4000026667", size: "36-40MM", desc: "TMT Internal Nozzles Complete Set", qty: "—" },
+        { code: "4000026659", size: "36-40MM", desc: "TMT Entry Guide", qty: "—" },
+        { code: "4000026660", size: "36-40MM", desc: "TMT Nozzle I", qty: "—" },
+        { code: "4000026661", size: "36-40MM", desc: "TMT Flow Guide", qty: "—" },
+        { code: "4000026662", size: "36-40MM", desc: "TMT Nozzle II", qty: "—" },
+        { code: "4000026663", size: "36-40MM", desc: "TMT Guide Pieces (Inserts)", qty: "—" },
+        { code: "4000026664", size: "36-40MM", desc: "TMT Venturi Guide", qty: "—" },
+        { code: "4000026665", size: "36-40MM", desc: "TMT Deflection Guide", qty: "—" },
+        { code: "4000026666", size: "36-40MM", desc: "TMT Air Nozzle", qty: "—" },
+        
+        { code: "4000026675", size: "36-40MM", desc: "TMT Exit Funnel", qty: "—" }
+     
+      ]
+    }
+  ]
+    }
+  };
+
+  // Rebar Revamp Phase II — reference pages (static spec content)
+  const REVAMP_CRUMB = `<div class="revamp-crumb"><a onclick="switchPage('tech-spec-overview')">Tech Spec</a><span class="sep">›</span><span>%TITLE%</span></div>`;
+
+  const REVAMP_DOC_META = `<p class="spec-doc-meta">Data taken from Technical Proposal dated <strong>19 November 2025</strong>.</p>`;
+
+  const REVAMP_DATA = {
+    'matcodes-overview': {
+      title: 'Mat Codes',
+      desc: 'SAP material codes and fitter tool box contents across the mill.',
+      html: `
+        <div class="revamp-block">
+          <p class="spec-meta" style="font-size:0.938rem; color: var(--text-dark);">
+            Material codes and fitter tool box contents for roughing, intermediate, and finishing
+            mill areas, plus pinch roll funnel parts and TMT quenching line materials. Select a
+            reference below to view its full item list, SAP material codes, and quantities.
+          </p>
+        </div>
+        <div class="revamp-block">
+          <div class="revamp-subhead">Tool Boxes</div>
+          <div class="dashboard-grid">
+            <div class="dash-card" onclick="switchPage('roughing')">
+              <h3>Roughing Mill Box</h3>
+              <p>Standard fitter tool box components for roughing stand maintenance.</p>
+              <span class="count">12 Items</span>
+            </div>
+            <div class="dash-card" onclick="switchPage('intermediate')">
+              <h3>Intermediate Mill Box</h3>
+              <p>Spanners, hammers, and measuring tools for intermediate mill fitters.</p>
+              <span class="count">15 Items</span>
+            </div>
+            <div class="dash-card" onclick="switchPage('finishing')">
+              <h3>Finishing Mill Box</h3>
+              <p>Complete fitter tool set for finishing stands, spanners, and cutting gear.</p>
+              <span class="count">24 Items</span>
+            </div>
+          </div>
+        </div>
+        <div class="revamp-block">
+          <div class="revamp-subhead">Material Codes</div>
+          <div class="dashboard-grid">
+            <div class="dash-card" onclick="switchPage('pinch-roll')">
+              <h3>Pinch Roll Funnel Parts</h3>
+              <p>Material codes for funnel holders.</p>
+              <span class="count">10 Technical Items</span>
+            </div>
+            <div class="dash-card" onclick="switchPage('tmt')">
+              <h3>TMT Materials</h3>
+              <p>TMT area materials.</p>
+              <span class="count">8 Specialized Items</span>
+            </div>
+          </div>
+        </div>`
+    },
+
+    'tech-spec-overview': {
+      title: 'Tech Spec',
+      desc: 'Technical specifications for the Rebar Mill Revamping Project — Phase II.',
+      html: `
+        <div class="revamp-block">
+          <div class="revamp-subhead">Reference Pages</div>
+          <div class="dashboard-grid">
+            <div class="dash-card" onclick="switchPage('revamp-billet-charging-grid')"><h3>Billet Charging Grid</h3><p>Rake beam & billet loading specifications.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-billet-charging-roller-table')"><h3>Billet Charging Roller Table</h3><p>Roller and drive specifications.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-billet-delivery-grid')"><h3>Billet Delivery Roller Table into Grid</h3><p>Roller and drive specifications.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-billet-pusher')"><h3>Billet Pusher</h3><p>Pushing force, stroke, and hydraulics.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-billet-discharging-roller-table')"><h3>Billet Discharging Roller Table</h3><p>Roller and drive specifications.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-working-roller-table')"><h3>Working Roller Table</h3><p>Mill line front roller table.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-stand-roll-data')"><h3>Stand & Roll Data</h3><p>Max roll diameters, Stand 1H–18H.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-stand-9')"><h3>Stand 9</h3><p>H450 Intermediate Mill.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-stand-10')"><h3>Stand 10</h3><p>V450 Intermediate Mill.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-stand-11')"><h3>Stand 11</h3><p>H450 Intermediate Mill.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-stand-12')"><h3>Stand 12</h3><p>V450 Intermediate Mill.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-cold-shear')"><h3>630t Cold Shear</h3><p>Cutting force, blade, and motor data.</p></div>
+          </div>
+        </div>`
+    },
+
+    'revamp-billet-charging-grid': {
+      title: 'Billet Charging Grid',
+      desc: 'Billet dimensions, rake beam travel, and hydraulic data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Billet Charging Grid')}
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Value</th><th>Unit</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Billet dimension</td><td>150 × 150 × 12,000 (or 12,100)</td><td>mm</td></tr>
+              <tr><td></td><td></td><td>160 × 160 × 12,000 (or 12,100)</td><td>mm</td></tr>
+              <tr><td>2</td><td>Billet quantity per group</td><td>4</td><td>pcs</td></tr>
+              <tr><td>3</td><td>Rake pitch</td><td>1140</td><td>mm</td></tr>
+              <tr><td>4</td><td>Rake stroke</td><td>1390</td><td>mm</td></tr>
+              <tr><td>5</td><td>Max. billet quantity on grid</td><td>4 × 4</td><td>pcs</td></tr>
+              <tr><td>6</td><td>Max. loaded billet weight</td><td>39</td><td>MT</td></tr>
+              <tr><td>7</td><td>Rake beam speed (Forward)</td><td>0.1</td><td>m/s</td></tr>
+              <tr><td></td><td>Rake beam speed (Reverse)</td><td>0.2</td><td>m/s</td></tr>
+              <tr><td>8</td><td>Hydraulic cylinder dimension</td><td>Ø100 / Ø70 (2 pcs)</td><td>mm</td></tr>
+              <tr><td>9</td><td>Hydraulic pressure (working)</td><td>12.5</td><td>MPa</td></tr>
+              <tr><td>10</td><td>Hydraulic pressure (system)</td><td>16</td><td>MPa</td></tr>
+            </tbody>
+          </table>
+        </div>
+        ${REVAMP_DOC_META}`
+    },
+
+    'revamp-billet-charging-roller-table': {
+      title: 'Billet Charging Roller Table',
+      desc: 'Roller dimensions, drive, and motor data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Billet Charging Roller Table')}
+        <p class="spec-meta">
+          <strong>Quantity:</strong> <span class="spec-highlight">5 × 5 groups</span><br>
+          <strong>Type:</strong> Roller table driven by VFD-controlled motor with forward/reverse
+          operation and power transmission to all rollers through a centralized chain drive.
+        </p>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Value</th><th>Remarks</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Roller dimension</td><td>Ø295 × 900 mm</td><td></td></tr>
+              <tr><td>2</td><td>Roller pitch</td><td>1200 mm</td><td></td></tr>
+              <tr><td>3</td><td>Linear speed</td><td>1.07 m/s</td><td>50 Hz</td></tr>
+              <tr><td>4</td><td>Gearbox</td><td>ZLY250-14</td><td></td></tr>
+              <tr><td>5</td><td>Motor</td><td>YPG200L1-6<br>Power Rating = 15 kW<br>Rotational speed = 975 RPM</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        ${REVAMP_DOC_META}`
+    },
+
+    'revamp-billet-delivery-grid': {
+      title: 'Billet Delivery Roller Table into Grid',
+      desc: 'Roller dimensions, drive, and motor data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Billet Delivery Roller Table into Grid')}
+        <p class="spec-meta">
+          <strong>Quantity:</strong> <span class="spec-highlight">5 × 2 groups</span><br>
+          <strong>Type:</strong> Roller table driven by VFD-controlled motor with forward/reverse
+          operation and power transmission to all rollers through a centralized chain drive.
+        </p>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Value</th><th>Remarks</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Roller dimension</td><td>Ø295 × 900 mm</td><td></td></tr>
+              <tr><td>2</td><td>Roller pitch</td><td>1200 mm</td><td></td></tr>
+              <tr><td>3</td><td>Linear speed</td><td>1.07 m/s</td><td>50 Hz</td></tr>
+              <tr><td>4</td><td>Gearbox</td><td>ZLY250-14</td><td></td></tr>
+              <tr><td>5</td><td>Motor</td><td>YPG200L1-6<br>Power Rating = 15 kW<br>Rotational speed = 975 RPM</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        ${REVAMP_DOC_META}`
+    },
+
+    'revamp-billet-pusher': {
+      title: 'Billet Pusher',
+      desc: 'Pushing force, stroke, and hydraulic data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Billet Pusher')}
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Value</th><th>Unit</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Pushing force</td><td>2500</td><td>kN</td></tr>
+              <tr><td>2</td><td>Pushing speed (forward)</td><td>0.05</td><td>m/s</td></tr>
+              <tr><td></td><td>Pushing speed (reverse)</td><td>0.1</td><td>m/s</td></tr>
+              <tr><td>3</td><td>Maximum stroke</td><td>1150</td><td>mm</td></tr>
+              <tr><td>4</td><td>Working stroke</td><td>1100</td><td>mm</td></tr>
+              <tr><td>5</td><td>Hydraulic cylinder dimension</td><td>Ø360/Ø240 (2 pcs)</td><td>mm</td></tr>
+              <tr><td>6</td><td>Hydraulic pressure (working)</td><td>12.5</td><td>MPa</td></tr>
+              <tr><td>7</td><td>Hydraulic pressure (system)</td><td>16</td><td>MPa</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="spec-note">Note: A fixed stopper with a capacity of 2432 kg × 4 billets is provided at the end of the billet pusher.</div>
+        ${REVAMP_DOC_META}`
+    },
+
+    'revamp-billet-discharging-roller-table': {
+      title: 'Billet Discharging Roller Table',
+      desc: 'Roller dimensions, gearmotor, and cooling data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Billet Discharging Roller Table')}
+        <div class="spec-table-container">
+          <table class="spec-table plain">
+            <tbody>
+              <tr><td>Quantity</td><td>3 groups</td></tr>
+              <tr><td>Total roller table length</td><td>18000 mm</td></tr>
+              <tr><td>Type</td><td>VF speed controlled roller table, FWD + REV operation, single (solo) drive</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th><th>Unit</th><th>Remarks</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Roller dimension</td><td>Ø240 × 520</td><td>mm</td><td></td></tr>
+              <tr><td>2</td><td>Roller pitch</td><td>1000</td><td>mm</td><td></td></tr>
+              <tr><td>3</td><td>Linear speed of roller top</td><td>1.5</td><td>m/s</td><td>50 Hz</td></tr>
+              <tr><td>4</td><td>Gearmotor</td><td>DR87-1/11.93-YGP132M2-4-M1R-4kW</td><td></td><td>Derating factor: 2.0</td></tr>
+              <tr><td>5</td><td>Bearing choke cooling</td><td>Water</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="spec-doc-meta" style="margin-bottom:16px;">Derating factor: reduction applied to the motor rated power to ensure safe and reliable operation under high load, temperature, or continuous duty conditions.</p>
+        ${REVAMP_DOC_META}`
+    },
+
+    'revamp-working-roller-table': {
+      title: 'Working Roller Table (Mill Line Front)',
+      desc: 'Roller dimensions, gearmotor, and cooling data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Working Roller Table front of Rolling Mill Line')}
+        <div class="spec-table-container">
+          <table class="spec-table plain">
+            <tbody>
+              <tr><td>Quantity</td><td>1 group</td></tr>
+              <tr><td>Total roller table length</td><td>4000 mm</td></tr>
+              <tr><td>Type</td><td>VF speed controlled roller table, FWD + REV operation, single (solo) drive</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th><th>Unit</th><th>Remarks</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Roller dimension</td><td>Ø240 × 520</td><td>mm</td><td></td></tr>
+              <tr><td>2</td><td>Roller pitch</td><td>1000</td><td>mm</td><td></td></tr>
+              <tr><td>3</td><td>Linear speed of roller top</td><td>1.5</td><td>m/s</td><td>50 Hz</td></tr>
+              <tr><td>4</td><td>Gearmotor</td><td>DR87-1/11.93-YGP132M2-4-M1R-4kW</td><td></td><td>Derating factor: 2.0</td></tr>
+              <tr><td>5</td><td>Bearing choke cooling</td><td>Water</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+        ${REVAMP_DOC_META}`
+    },
+
+    'revamp-stand-roll-data': {
+      title: 'Stand & Roll Data',
+      desc: 'Maximum roll diameters, Stand 1H through 18H.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Stand & Roll Data')}
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>Stand</th><th>Max Roll Diameter (mm)</th></tr></thead>
+            <tbody>
+              <tr><td>1H</td><td>670</td></tr>
+              <tr><td>2V</td><td>670</td></tr>
+              <tr style="background: var(--bg-subtle);"><td colspan="2">&nbsp;</td></tr>
+              <tr><td>3H</td><td>580</td></tr>
+              <tr><td>4V</td><td>580</td></tr>
+              <tr><td>5H</td><td>580</td></tr>
+              <tr><td>6V</td><td>580</td></tr>
+              <tr style="background: var(--bg-subtle);"><td colspan="2">&nbsp;</td></tr>
+              <tr><td>7H</td><td>480</td></tr>
+              <tr><td>8V</td><td>480</td></tr>
+              <tr><td>9H</td><td>480</td></tr>
+              <tr><td>10V</td><td>480</td></tr>
+              <tr><td><a href="#" onclick="switchPage('revamp-stand-11'); return false;" style="color: var(--primary); font-weight: 600; text-decoration: none;">11H</a></td><td>480</td></tr>
+              <tr><td>12V</td><td>480</td></tr>
+              <tr style="background: var(--bg-subtle);"><td colspan="2">&nbsp;</td></tr>
+              <tr><td>13H</td><td>350</td></tr>
+              <tr><td>14V</td><td>350</td></tr>
+              <tr><td>15H</td><td>350</td></tr>
+              <tr><td>16H</td><td>350</td></tr>
+              <tr><td>17H</td><td>350</td></tr>
+              <tr><td>18H</td><td>350</td></tr>
+            </tbody>
+          </table>
+        </div>`
+    },
+
+    'revamp-stand-9': {
+      title: 'Stand 9',
+      desc: 'H450 Intermediate Mill.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Stand 9')}
+        <div class="revamp-subhead" style="font-size:1rem; color: var(--text-muted); font-weight:600; margin-bottom:12px;">H450 Intermediate Mill</div>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Maximum Rolling Force</td><td>1025 kN</td></tr>
+              <tr><td>2</td><td>Maximum Rolling Torque</td><td>72 kNm</td></tr>
+              <tr><td>3</td><td><a href="#" onclick="switchPage('revamp-stand-roll-data'); return false;" style="color: var(--primary); font-weight: 600; text-decoration: none;">Roll Data</a></td><td>Max dia: 480 mm<br>Discard dia: 430 mm<br>Barrel length: 700 mm</td></tr>
+              <tr><td>4</td><td>Roll Neck Diameter</td><td>230 mm</td></tr>
+              <tr><td>5</td><td>Cardan Shaft</td><td>SWC350A-1830 + 700</td></tr>
+              <tr><td>6</td><td>Gear Ratio</td><td>18</td></tr>
+              <tr><td>7</td><td>Safety Factor</td><td>2.5</td></tr>
+              <tr><td>8</td><td>Motor</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>`
+    },
+
+    'revamp-stand-10': {
+      title: 'Stand 10',
+      desc: 'V450 Intermediate Mill.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Stand 10')}
+        <div class="revamp-subhead" style="font-size:1rem; color: var(--text-muted); font-weight:600; margin-bottom:12px;">V450 Intermediate Mill</div>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Maximum Rolling Force</td><td>700 kN</td></tr>
+              <tr><td>2</td><td>Maximum Rolling Torque</td><td>50 kNm</td></tr>
+              <tr><td>3</td><td><a href="#" onclick="switchPage('revamp-stand-roll-data'); return false;" style="color: var(--primary); font-weight: 600; text-decoration: none;">Roll Data</a></td><td>Max dia: 480 mm<br>Discard dia: 430 mm<br>Barrel length: 700 mm</td></tr>
+              <tr><td>4</td><td>Roll Neck Diameter</td><td>230 mm</td></tr>
+              <tr><td>5</td><td>Cardan Shaft</td><td>SWC350A-1830 + 700</td></tr>
+              <tr><td>6</td><td>Gear Ratio</td><td>13</td></tr>
+              <tr><td>7</td><td>Safety Factor</td><td>2.5</td></tr>
+              <tr><td>8</td><td>Motor</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>`
+    },
+
+    'revamp-stand-11': {
+      title: 'Stand 11',
+      desc: 'H450 Intermediate Mill.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Stand 11')}
+        <div class="revamp-subhead" style="font-size:1rem; color: var(--text-muted); font-weight:600; margin-bottom:12px;">H450 Intermediate Mill</div>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Maximum Rolling Force</td><td>1025 kN</td></tr>
+              <tr><td>2</td><td>Maximum Rolling Torque</td><td>72 kNm</td></tr>
+              <tr><td>3</td><td><a href="#" onclick="switchPage('revamp-stand-roll-data'); return false;" style="color: var(--primary); font-weight: 600; text-decoration: none;">Roll Data</a></td><td>Max dia: 480 mm<br>Discard dia: 430 mm<br>Barrel length: 700 mm</td></tr>
+              <tr><td>4</td><td>Roll Neck Diameter</td><td>230 mm</td></tr>
+              <tr><td>5</td><td>Cardan Shaft</td><td>SWC350A-1830 + 700</td></tr>
+              <tr><td>6</td><td>Gear Ratio</td><td>11</td></tr>
+              <tr><td>7</td><td>Safety Factor</td><td>2.5</td></tr>
+              <tr><td>8</td><td>Motor</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>`
+    },
+
+    'revamp-stand-12': {
+      title: 'Stand 12',
+      desc: 'V450 Intermediate Mill.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'Stand 12')}
+        <div class="revamp-subhead" style="font-size:1rem; color: var(--text-muted); font-weight:600; margin-bottom:12px;">V450 Intermediate Mill</div>
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Maximum Rolling Force</td><td>700 kN</td></tr>
+              <tr><td>2</td><td>Maximum Rolling Torque</td><td>50 kNm</td></tr>
+              <tr><td>3</td><td><a href="#" onclick="switchPage('revamp-stand-roll-data'); return false;" style="color: var(--primary); font-weight: 600; text-decoration: none;">Roll Data</a></td><td>Max dia: 480 mm<br>Discard dia: 430 mm<br>Barrel length: 700 mm</td></tr>
+              <tr><td>4</td><td>Roll Neck Diameter</td><td>230 mm</td></tr>
+              <tr><td>5</td><td>Cardan Shaft</td><td>SWC350A-1830 + 700</td></tr>
+              <tr><td>6</td><td>Gear Ratio</td><td>8.8</td></tr>
+              <tr><td>7</td><td>Safety Factor</td><td>2.5</td></tr>
+              <tr><td>8</td><td>Motor</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>`
+    },
+
+    'revamp-cold-shear': {
+      title: '630t Cold Shear',
+      desc: 'Cutting force, blade, and motor data.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', '630t Cold Shear')}
+        <div class="spec-table-container">
+          <table class="spec-table">
+            <thead><tr><th>SN</th><th>Specification</th><th>Data</th><th>Unit</th><th>Remark</th></tr></thead>
+            <tbody>
+              <tr><td colspan="5"><strong>Type:</strong> Top blade movable, Bottom blade fixed</td></tr>
+              <tr><td>1</td><td>Max. Cutting Force</td><td>6300</td><td>kN</td><td></td></tr>
+              <tr><td>2</td><td>Blade Width</td><td>1000</td><td>mm</td><td></td></tr>
+              <tr><td>3</td><td>Blade Openness</td><td>130</td><td>mm</td><td></td></tr>
+              <tr><td>4</td><td>Max. Cutting Frequency</td><td>18</td><td>times/min</td><td>One cutting cycle = 3.33 s</td></tr>
+              <tr><td>5</td><td>Motor</td><td>Y315L14<br>Power rating = 160 kW<br>Rotational Speed = 1480 rpm</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>`
+    }
+  };
+
+  let currentPage = 'home';
+
+  const SECTION_LINKS = {
+    'Mat Codes': 'matcodes-overview',
+    'Tech Spec': 'tech-spec-overview'
+  };
+
+  const SECTION_TO_GROUP = {
+    'Mat Codes': 'matcodes',
+    'Tech Spec': 'techspec'
+  };
+
+  const PAGE_TO_GROUP = {
+    'matcodes-overview': 'matcodes',
+    'tech-spec-overview': 'techspec'
+  };
+
+  function toggleNavGroup(groupId) {
+    const menu = document.getElementById('navGroup-' + groupId);
+    const header = document.getElementById('navHeader-' + groupId);
+    const isOpen = !menu.classList.contains('collapsed');
+
+    if (isOpen) {
+      menu.classList.add('collapsed');
+      header.classList.remove('open');
+    } else {
+      menu.classList.remove('collapsed');
+      header.classList.add('open');
+    }
+  }
+
+  function updateNavGroups(activeGroupId) {
+    ['techspec', 'matcodes'].forEach(groupId => {
+      const menu = document.getElementById('navGroup-' + groupId);
+      const header = document.getElementById('navHeader-' + groupId);
+      if (groupId === activeGroupId) {
+        menu.classList.remove('collapsed');
+        header.classList.add('open');
+      } else {
+        menu.classList.add('collapsed');
+        header.classList.remove('open');
+      }
+    });
+  }
+
+  function setBreadcrumb(section, current) {
+    let html = '<span class="crumb-link" onclick="switchPage(\'home\')">Mill Docs</span>';
+    if (section) {
+      const sectionKey = SECTION_LINKS[section];
+      if (sectionKey) {
+        html += '<span class="sep">/</span><span class="crumb-link" onclick="switchPage(\'' + sectionKey + '\')">' + section + '</span>';
+      } else {
+        html += '<span class="sep">/</span><span>' + section + '</span>';
+      }
+    }
+    html += '<span class="sep">/</span><span class="current" id="breadcrumbCurrent">' + current + '</span>';
+    document.getElementById('breadcrumbTrail').innerHTML = html;
+  }
+
+  function switchPage(pageKey) {
+    currentPage = pageKey;
+
+    // Update active state in menu
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.classList.toggle('active', link.getAttribute('data-page') === pageKey);
+    });
+
+    const kitTitle = document.getElementById('kitTitle');
+    const kitDesc = document.getElementById('kitDesc');
+    const homeIntro = document.getElementById('homeIntro');
+    const tableWrapper = document.getElementById('tableWrapper');
+    const dashboardGrid = document.getElementById('dashboardGrid');
+    const revampContent = document.getElementById('revampContent');
+    const searchFeedbackEl = document.getElementById('searchFeedback');
+
+    // Clear search on switch
+    document.getElementById('globalSearch').value = '';
+    searchFeedbackEl.style.display = 'none';
+
+    if (pageKey === 'home') {
+      setBreadcrumb(null, "Home Dashboard");
+      kitTitle.textContent = "HRM1 Production";
+      kitDesc.textContent = "Reference documents for technical specifications and material codes.";
+      homeIntro.style.display = 'block';
+      tableWrapper.style.display = 'none';
+      revampContent.style.display = 'none';
+      dashboardGrid.style.display = 'grid';
+      updateNavGroups(null);
+    } else if (REVAMP_DATA[pageKey]) {
+      const pageInfo = REVAMP_DATA[pageKey];
+      setBreadcrumb(pageInfo.section || null, pageInfo.title);
+      kitTitle.textContent = pageInfo.title;
+      kitDesc.textContent = pageInfo.desc;
+      homeIntro.style.display = 'none';
+
+      dashboardGrid.style.display = 'none';
+      tableWrapper.style.display = 'none';
+      revampContent.style.display = 'block';
+      revampContent.innerHTML = pageInfo.html;
+      searchFeedbackEl.style.display = 'none';
+      updateNavGroups(PAGE_TO_GROUP[pageKey] || SECTION_TO_GROUP[pageInfo.section] || null);
+    } else {
+      const pageInfo = MILL_DATA[pageKey];
+      setBreadcrumb(pageInfo.section || null, pageInfo.title);
+      kitTitle.textContent = pageInfo.title;
+      kitDesc.textContent = pageInfo.desc;
+      homeIntro.style.display = 'none';
+      
+      dashboardGrid.style.display = 'none';
+      revampContent.style.display = 'none';
+      tableWrapper.style.display = 'block';
+      
+      renderTableHead(pageInfo.type, pageInfo.data);
+      renderTableBody(pageInfo.data, pageInfo.type);
+      updateNavGroups(PAGE_TO_GROUP[pageKey] || SECTION_TO_GROUP[pageInfo.section] || null);
+    }
+
+    // Close mobile menu on navigate
+    document.getElementById('sidebar').classList.remove('open');
+  }
+
+  function isGroupedData(data) {
+    return Array.isArray(data) && data.some(item => item && Array.isArray(item.items));
+  }
+
+  function matchesQuery(item, query) {
+    if (!query) return true;
+    if (item && Array.isArray(item.items)) {
+      return item.category.toLowerCase().includes(query) ||
+        item.note.toLowerCase().includes(query) ||
+        item.items.some(entry => matchesQuery(entry, query));
+    }
+
+    return Object.values(item).some(val => String(val).toLowerCase().includes(query));
+  }
+
+  function renderTableHead(type, data) {
+    const thead = document.getElementById('kitTableHead');
+    const grouped = isGroupedData(data);
+
+    if (type === 'standard' || grouped) {
+      thead.innerHTML = `
+        <tr>
+          <th>Mat Code</th>
+          <th>Size</th>
+          <th>Description</th>
+          <th>Qty</th>
+        </tr>`;
+    } else {
+      thead.innerHTML = `
+        <tr>
+          <th>Mat Code</th>
+          <th>Description</th>
+        </tr>`;
+    }
+  }
+
+  function renderTableBody(data, type) {
+    const tbody = document.getElementById('kitTableBody');
+    const noResults = document.getElementById('noResults');
+    tbody.innerHTML = '';
+
+    if (!Array.isArray(data) || data.length === 0) {
+      noResults.style.display = 'block';
+      return;
+    }
+
+    noResults.style.display = 'none';
+
+    if (isGroupedData(data)) {
+      data.forEach(group => {
+        if (!group.items || !Array.isArray(group.items)) return;
+
+        const categoryRow = document.createElement('tr');
+        categoryRow.className = 'category-row';
+        categoryRow.innerHTML = `<td colspan="4"><strong>${group.category}</strong></td>`;
+        tbody.appendChild(categoryRow);
+
+        group.items.forEach(item => {
+          const row = document.createElement('tr');
+          if (item.isSet) row.classList.add('is-set');
+          row.innerHTML = `
+            <td>${item.code ? `<span class="mat-code">${item.code}</span>` : '<span style="color:#ccc;">—</span>'}</td>
+            <td>${item.size && item.size !== '—' ? `<span class="size-badge">${item.size}</span>` : '—'}</td>
+            <td><strong>${item.desc}</strong></td>
+            <td>${item.qty || '—'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+
+        if (group.note) {
+          const noteRow = document.createElement('tr');
+          noteRow.innerHTML = `<td colspan="4"><div class="search-results-header" style="margin:0; border:none; padding:12px 0; background:transparent;">${group.note}</div></td>`;
+          tbody.appendChild(noteRow);
+        }
+      });
+      return;
+    }
+
+    data.forEach(item => {
+      const row = document.createElement('tr');
+      if (item.isSet) row.classList.add('is-set');
+
+      if (type === 'standard') {
+        row.innerHTML = `
+          <td>${item.code ? `<span class="mat-code">${item.code}</span>` : '<span style="color:#ccc;">—</span>'}</td>
+          <td>${item.size && item.size !== '—' ? `<span class="size-badge">${item.size}</span>` : '—'}</td>
+          <td><strong>${item.desc}</strong></td>
+          <td>${item.qty || '—'}</td>
+        `;
+      } else {
+        row.innerHTML = `
+          <td><span class="mat-code">${item.code}</span></td>
+          <td><strong>${item.desc}</strong></td>
+        `;
+      }
+      tbody.appendChild(row);
+    });
+  }
+
+  // Interactive Live Search
+  const searchInput = document.getElementById('globalSearch');
+  const searchFeedback = document.getElementById('searchFeedback');
+  const clearSearchBtn = document.getElementById('clearSearch');
+
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+    if (currentPage === 'home' || REVAMP_DATA[currentPage]) return;
+
+    const pageInfo = MILL_DATA[currentPage];
+    if (query) {
+      searchFeedback.style.display = 'block';
+      const filtered = pageInfo.data.filter(item => matchesQuery(item, query));
+      renderTableBody(filtered, pageInfo.type);
+    } else {
+      searchFeedback.style.display = 'none';
+      renderTableBody(pageInfo.data, pageInfo.type);
+    }
+  });
+
+  clearSearchBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    searchInput.value = '';
+    searchFeedback.style.display = 'none';
+    if (currentPage !== 'home' && !REVAMP_DATA[currentPage]) {
+      renderTableBody(MILL_DATA[currentPage].data, MILL_DATA[currentPage].type);
+    }
+  });
+
+  // Mobile sidebar toggle logic
+  document.getElementById('sidebarToggle').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+  window.addEventListener('scroll', () => {
+    scrollTopBtn.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // PDF Export functionality
+  document.getElementById('exportPdfBtn').addEventListener('click', () => {
+    const element = document.getElementById('pdfContent');
+    const activePageInfo = REVAMP_DATA[currentPage] || MILL_DATA[currentPage];
+    const fileName = currentPage === 'home' ? 'Mill_Docs_Overview.pdf' : `${activePageInfo.title.replace(/\s+/g, '_')}.pdf`;
+    
+    const opt = {
+      margin:       [0.5, 0.5, 0.5, 0.5],
+      filename:     fileName,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  });
+</script>
+</body>
+</html>

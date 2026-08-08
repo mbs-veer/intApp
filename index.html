@@ -1077,9 +1077,174 @@ data: [
             <div class="dash-card" onclick="switchPage('revamp-stand-10')"><h3>Stand 10</h3><p>V450 Intermediate Mill.</p></div>
             <div class="dash-card" onclick="switchPage('revamp-stand-11')"><h3>Stand 11</h3><p>H450 Intermediate Mill.</p></div>
             <div class="dash-card" onclick="switchPage('revamp-stand-12')"><h3>Stand 12</h3><p>V450 Intermediate Mill.</p></div>
+            <div class="dash-card" onclick="switchPage('revamp-tmt-system')"><h3>TMT System</h3><p>Component sizing and guide data for the TMT system.</p></div>
             <div class="dash-card" onclick="switchPage('revamp-cold-shear')"><h3>630t Cold Shear</h3><p>Cutting force, blade, and motor data.</p></div>
           </div>
         </div>`
+    },
+
+    'revamp-tmt-system': {
+      title: 'TMT System',
+      desc: 'Component sizing and guide data for the TMT system.',
+      section: 'Tech Spec',
+      html: `
+        ${REVAMP_CRUMB.replace('%TITLE%', 'TMT System')}
+        <div class="revamp-subhead" style="font-size:1rem; color: var(--text-muted); font-weight:600; margin-bottom:12px;">Internal diameters of TMT Components</div>
+        <div class="spec-table-container">
+          <table class="spec-table" style="border-collapse: collapse; text-align: center;">
+            <thead>
+              <tr>
+                <th style="padding: 6px 12px; text-align: center;">Part Name</th>
+                <th style="padding: 6px 12px; text-align: center;">10-12MM</th>
+                <th style="padding: 6px 12px; text-align: center;">16MM</th>
+                <th style="padding: 6px 12px; text-align: center;">20-32MM</th>
+                <th style="padding: 6px 12px; text-align: center;">36-40MM</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Entry Guide</td>
+                <td style="padding: 6px 12px; text-align: center;">20</td>
+                <td style="padding: 6px 12px; text-align: center;">25</td>
+                <td style="padding: 6px 12px; text-align: center;">45</td>
+                <td style="padding: 6px 12px; text-align: center;">50</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Nozzle I</td>
+                <td style="padding: 6px 12px; text-align: center;">22</td>
+                <td style="padding: 6px 12px; text-align: center;">28</td>
+                <td style="padding: 6px 12px; text-align: center;">47</td>
+                <td style="padding: 6px 12px; text-align: center;">52</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Nozzle II</td>
+                <td style="padding: 6px 12px; text-align: center;">22</td>
+                <td style="padding: 6px 12px; text-align: center;">28</td>
+                <td style="padding: 6px 12px; text-align: center;">47</td>
+                <td style="padding: 6px 12px; text-align: center;">52</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Flow Guide</td>
+                <td style="padding: 6px 12px; text-align: center;">24</td>
+                <td style="padding: 6px 12px; text-align: center;">28</td>
+                <td style="padding: 6px 12px; text-align: center;">47</td>
+                <td style="padding: 6px 12px; text-align: center;">52</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Guide Piece</td>
+                <td style="padding: 6px 12px; text-align: center;">22</td>
+                <td style="padding: 6px 12px; text-align: center;">28</td>
+                <td style="padding: 6px 12px; text-align: center;">47</td>
+                <td style="padding: 6px 12px; text-align: center;">52</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Venturi Guide</td>
+                <td style="padding: 6px 12px; text-align: center;">22</td>
+                <td style="padding: 6px 12px; text-align: center;">28</td>
+                <td style="padding: 6px 12px; text-align: center;">47</td>
+                <td style="padding: 6px 12px; text-align: center;">52</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Deflection Guide</td>
+                <td style="padding: 6px 12px; text-align: center;">22</td>
+                <td style="padding: 6px 12px; text-align: center;">28</td>
+                <td style="padding: 6px 12px; text-align: center;">47</td>
+                <td style="padding: 6px 12px; text-align: center;">52</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Funnel I</td>
+                <td style="padding: 6px 12px; text-align: center;">22</td>
+                <td style="padding: 6px 12px; text-align: center;"></td>
+                <td style="padding: 6px 12px; text-align: center;"></td>
+                <td style="padding: 6px 12px; text-align: center;"></td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">Funnel II</td>
+                <td style="padding: 6px 12px; text-align: center;">26</td>
+                <td style="padding: 6px 12px; text-align: center;"></td>
+                <td style="padding: 6px 12px; text-align: center;"></td>
+                <td style="padding: 6px 12px; text-align: center;"></td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 12px; text-align: center;">All dimensions are in mm</td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+       
+
+
+<div class="revamp-subhead" style="font-size:1rem; color: var(--text-muted); font-weight:600; margin-bottom:12px;">Quantity of TMT Components</div>
+<div class="spec-table-container">
+  <table class="spec-table" style="border-collapse: collapse; text-align: center;">
+    <thead>
+      <tr>
+        <th style="padding: 6px 12px; text-align: center;">Part Name</th>
+        <th style="padding: 6px 12px; text-align: center;">10/12</th>
+        <th style="padding: 6px 12px; text-align: center;">16</th>
+        <th style="padding: 6px 12px; text-align: center;">20/32</th>
+        <th style="padding: 6px 12px; text-align: center;">36/40</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Entry Guide</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Nozzle I</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Nozzle II</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Flow Guide</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Guide Piece (Each Section)</td>
+        <td style="padding: 6px 12px; text-align: center;">16</td>
+        <td style="padding: 6px 12px; text-align: center;">8</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Venturi Guide</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+        <td style="padding: 6px 12px; text-align: center;">1</td>
+      </tr>
+      <tr>
+        <td style="padding: 6px 12px; text-align: center;">Deflection Guide</td>
+        <td style="padding: 6px 12px; text-align: center;">8</td>
+        <td style="padding: 6px 12px; text-align: center;">4</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+        <td style="padding: 6px 12px; text-align: center;">2</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+
+        `
     },
 
     'revamp-billet-charging-grid': {
